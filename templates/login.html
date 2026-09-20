@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SmartHealth Login</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <h1>SmartHealth Login</h1>
+
+    <form method="POST" action="/login">
+
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <button type="submit">Login</button>
+
+    </form>
+    <h3>OR</h3>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <div id="g_id_onload" data-client_id="219197177710-dj8llnafm25i5bmfnf01blt8bgbjftsf.apps.googleusercontent.com"
+        data-context="signin" data-ux_mode="popup" data-callback="handleCredentialResponse">
+    </div>
+
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with"
+        data-shape="rectangular">
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            window.location.href = "/dashboard";
+        }
+    </script>
+
+</body>

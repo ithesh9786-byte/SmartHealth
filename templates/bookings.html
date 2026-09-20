@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <h1>My Bookings</h1>
+
+    {% if bookings %}
+
+    {% for booking in bookings %}
+
+    <div class="booking-card">
+
+        <h2>{{ booking.event_name }}</h2>
+
+        <p><strong>Date:</strong> {{ booking.event_date }}</p>
+
+        <p><strong>Time:</strong> {{ booking.event_time }}</p>
+
+        <p><strong>Location:</strong> {{ booking.location }}</p>
+
+    </div>
+
+    {% endfor %}
+
+    {% else %}
+
+    <p>No bookings yet.</p>
+
+    {% endif %}
+
+    <br>
+
+    <a href="/book">Book Another Service</a>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+
+</html>

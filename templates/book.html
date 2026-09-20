@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SmartHealth Booking</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <h1>Book a Health Service</h1>
+
+    <form method="POST" action="/book">
+
+        <label>Health Service:</label><br>
+        <select name="event_name" required>
+            <option value="">Select a service</option>
+            <option value="General Health Checkup">General Health Checkup</option>
+            <option value="Doctor Consultation">Doctor Consultation</option>
+            <option value="Blood Test">Blood Test</option>
+            <option value="Dental Checkup">Dental Checkup</option>
+            <option value="Eye Checkup">Eye Checkup</option>
+        </select>
+
+        <br><br>
+
+        <label>Date:</label><br>
+        <input type="date" name="event_date" required>
+
+        <br><br>
+
+        <label>Time:</label><br>
+        <input type="time" name="event_time" required>
+
+        <br><br>
+
+        <label>Location:</label><br>
+        <input type="text" name="location" placeholder="Enter location" required>
+
+        <br><br>
+
+        <button type="submit">Book Now</button>
+
+    </form>
+
+    <br>
+
+    <a href="/dashboard">Back to Dashboard</a>
+
+</body>
+
+</html>
