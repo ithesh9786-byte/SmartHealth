@@ -50,19 +50,7 @@ def login():
         return "Invalid email or password"
 
     return render_template("login.html")
-def google_login():
-    try:
-        credential = request.form["credential"]
-
-        CLIENT_ID = "219197177710-dj8llnafm25i5bmfnf01blt8bgbjfts.apps.googleusercontent.com"
-
-        user_info = id_token.verify_oauth2_token(
-            credential,
-            requests.Request(),
-            CLIENT_ID
-        )
-
-        email = user_info["email"]
+     email = user_info["email"]
 
 # Allowed Google test users
 ALLOWED_USERS = {
@@ -102,6 +90,17 @@ ALLOWED_USERS = {
     "mohanrajmalar55@gmail.com"
 }
 
+def google_login():
+    try:
+        credential = request.form["credential"]
+
+        CLIENT_ID = "219197177710-dj8llnafm25i5bmfnf01blt8bgbjfts.apps.googleusercontent.com"
+
+        user_info = id_token.verify_oauth2_token(
+            credential,
+            requests.Request(),
+            CLIENT_ID
+        )
 if email.lower() not in {user.lower() for user in ALLOWED_USERS}:
     return "Access denied. This Google account is not registered."
 
