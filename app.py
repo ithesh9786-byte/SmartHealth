@@ -63,6 +63,48 @@ def google_login():
         )
 
         email = user_info["email"]
+
+# Allowed Google test users
+ALLOWED_USERS = {
+    "ithesh9786@gmail.com",
+    "s16678524@gmail.com",
+    "premkumarpaveen@gmail.com",
+    "amarnath8610526257@gmail.com",
+    "gnithishkumar2006@gmail.com",
+    "harinisrignanavel@gmail.com",
+    "srirammm1333@gmail.com",
+    "mageshmagim012@gmail.com",
+    "vasanthraj145@gmail.com",
+    "rdurga7002@gmail.com",
+    "ragavi2470@gmail.com",
+    "mugil.murugan0@gmail.com",
+    "rajarivazhan2007@gmail.com",
+    "elanthamizhanj07@gmail.com",
+    "ap9384410@gmail.com",
+    "naveenanatarajan123@gmail.com",
+    "kuganjvk@gmail.com",
+    "abipriya2926@gmail.com",
+    "premav3004@gmail.com",
+    "munnisha.8610@gmail.com",
+    "nivedhaarumugam77@gmail.com",
+    "ndharani007@gmail.com",
+    "keerthivasan3534@gmail.com",
+    "leoprabhu149@gmail.com",
+    "syedkutbudeen0@gmail.com",
+    "mmanandh33@gmail.com",
+    "sujisujitha7002@gmail.com",
+    "amirthasenthilkumar26@gmail.com",
+    "raji875438@gmail.com",
+    "kalai9791986813@gmail.com",
+    "maindupriya@gmail.com",
+    "saravanan8903764645@gmail.com",
+    "jajagatheesh34@gmail.com",
+    "mohanrajmalar55@gmail.com"
+}
+
+if email.lower() not in {user.lower() for user in ALLOWED_USERS}:
+    return "Access denied. This Google account is not registered."
+
         name = user_info.get("name", "")
 
         db = get_db()
