@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, redirect, session
 import os
-import mysql.connector
+
+from flask import Flask, render_template, request, redirect, url_for, session
 
 from werkzeug.security import generate_password_hash, check_password_hash
+
+import mysql.connector
 
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -10,8 +12,10 @@ from google.auth.transport import requests
 
 app = Flask(__name__)
 
-# Session secret
-app.secret_key = os.environ.get("SECRET_KEY", "smarthealth-secret-key")
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "smarthealth-secret-key"
+)
 
 
 # =========================================================
@@ -60,7 +64,10 @@ ALLOWED_USERS = {
 # GOOGLE CLIENT ID
 # =========================================================
 
-CLIENT_ID = "219197177710-dj8llnafm25i5bmfnf01blt8bgbjfts.apps.googleusercontent.com"
+CLIENT_ID = (
+    "219197177710-dj8llnafm25i5bmfnf01blt8bgbjfts"
+    ".apps.googleusercontent.com"
+)
 
 
 # =========================================================
@@ -68,12 +75,13 @@ CLIENT_ID = "219197177710-dj8llnafm25i5bmfnf01blt8bgbjfts.apps.googleusercontent
 # =========================================================
 
 def get_db():
+
     return mysql.connector.connect(
-        host=os.environ.get("MYSQL_HOST"),
+        host=os.environ.get("MYSQL_HOST", "localhost"),
         port=int(os.environ.get("MYSQL_PORT", 3306)),
-        user=os.environ.get("MYSQL_USER"),
-        password=os.environ.get("MYSQL_PASSWORD"),
-        database=os.environ.get("MYSQL_DATABASE")
+        user=os.environ.get("MYSQL_USER", "root"),
+        password=os.environ.get("MYSQL_PASSWORD", ""),
+        database=os.environ.get("MYSQL_DATABASE", "smarthealth")
     )
 
 
@@ -85,12 +93,14 @@ def get_db():
 def home():
 
     try:
+
         db = get_db()
         db.close()
 
         return render_template("index.html")
 
     except Exception as e:
+
         return f"MySQL Error: {e}"
 
 
@@ -118,16 +128,26 @@ def login():
 
             user = cursor.fetchone()
 
-            if user and check_password_hash(
-                user["password"],
-                password
-            ):
+            if user:
 
-                session["user_id"] = user.get("id")
-                session["email"] = user["email"]
-                session["name"] = user.get("name", "")
+                try:
 
-                return redirect("/")
+                    valid_password = check_password_hash(
+                        user["password"],
+                        password
+                    )
+
+                except Exception:
+
+                    valid_password = False
+
+                if valid_password:
+
+                    session["user_id"] = user.get("id")
+                    session["email"] = user["email"]
+                    session["name"] = user.get("name", "")
+
+                    return redirect(url_for("dashboard"))
 
             return "Invalid email or password."
 
@@ -144,52 +164,6 @@ def login():
 
 
 # =========================================================
-# REGISTER
-# =========================================================
-
-@app.route("/register", methods=["GET", "POST"])
-def register():
-
-    if request.method == "POST":
-
-        name = request.form["name"]
-        email = request.form["email"]
-        password = request.form["password"]
-
-        # Hash password
-        password = generate_password_hash(password)
-
-        db = get_db()
-        cursor = db.cursor()
-
-        try:
-
-            cursor.execute(
-                """
-                INSERT INTO users
-                (name, email, password)
-                VALUES (%s, %s, %s)
-                """,
-                (name, email, password)
-            )
-
-            db.commit()
-
-            return "Registration successful! <a href='/login'>Login</a>"
-
-        except mysql.connector.Error as e:
-
-            return f"Registration Error: {e}"
-
-        finally:
-
-            cursor.close()
-            db.close()
-
-    return render_template("register.html")
-
-
-# =========================================================
 # GOOGLE LOGIN
 # =========================================================
 
@@ -198,43 +172,29 @@ def google_login():
 
     try:
 
-        # Get Google credential
         credential = request.form["credential"]
 
-        # Verify Google token
         user_info = id_token.verify_oauth2_token(
             credential,
             requests.Request(),
             CLIENT_ID
         )
 
-        # Get Google email
         email = user_info["email"]
 
-        # =================================================
-        # CHECK ALLOWED GOOGLE USERS
-        # =================================================
-
+        # Check allowed Google users
         if email.lower() not in {
-            user.lower() for user in ALLOWED_USERS
+            user.lower()
+            for user in ALLOWED_USERS
         }:
 
             return "Access denied. This Google account is not registered."
 
-
-        # Get Google name
         name = user_info.get("name", "")
-
-
-        # =================================================
-        # CONNECT MYSQL
-        # =================================================
 
         db = get_db()
         cursor = db.cursor(dictionary=True)
 
-
-        # Check whether user already exists
         cursor.execute(
             "SELECT * FROM users WHERE email=%s",
             (email,)
@@ -242,11 +202,7 @@ def google_login():
 
         user = cursor.fetchone()
 
-
-        # =================================================
-        # CREATE USER IF NOT EXISTS
-        # =================================================
-
+        # Create Google user if not already registered
         if not user:
 
             cursor.execute(
@@ -264,11 +220,7 @@ def google_login():
 
             db.commit()
 
-
-        # =================================================
-        # SAVE LOGIN SESSION
-        # =================================================
-
+        # Get user again
         cursor.execute(
             "SELECT * FROM users WHERE email=%s",
             (email,)
@@ -276,27 +228,206 @@ def google_login():
 
         user = cursor.fetchone()
 
+        # Save session
         session["user_id"] = user.get("id")
         session["email"] = email
         session["name"] = name
 
+        cursor.close()
+        db.close()
+
+        return redirect(url_for("dashboard"))
+
+    except Exception as e:
+
+        return f"Google Login Error: {e}"
+
+
+# =========================================================
+# REGISTER
+# =========================================================
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    if request.method == "POST":
+
+        name = request.form["name"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        password = generate_password_hash(password)
+
+        db = get_db()
+        cursor = db.cursor()
+
+        try:
+
+            cursor.execute(
+                """
+                INSERT INTO users
+                (name, email, password)
+                VALUES (%s, %s, %s)
+                """,
+                (
+                    name,
+                    email,
+                    password
+                )
+            )
+
+            db.commit()
+
+            return (
+                "Registration successful! "
+                "<a href='/login'>Login</a>"
+            )
+
+        except mysql.connector.Error as e:
+
+            return f"Registration Error: {e}"
+
+        finally:
+
+            cursor.close()
+            db.close()
+
+    return render_template("register.html")
+
+
+# =========================================================
+# DASHBOARD
+# =========================================================
+
+@app.route("/dashboard")
+def dashboard():
+
+    if "email" not in session:
+
+        return redirect(url_for("login"))
+
+    return render_template("dashboard.html")
+
+
+# =========================================================
+# SERVICES
+# =========================================================
+
+@app.route("/services")
+def services():
+
+    return render_template("services.html")
+
+
+# =========================================================
+# BOOKINGS
+# =========================================================
+
+@app.route("/bookings")
+def bookings():
+
+    if "email" not in session:
+
+        return redirect(url_for("login"))
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+
+        user_id = session.get("user_id")
+
+        cursor.execute(
+            """
+            SELECT *
+            FROM bookings
+            WHERE user_id=%s
+            ORDER BY id DESC
+            """,
+            (user_id,)
+        )
+
+        bookings = cursor.fetchall()
+
+        return render_template(
+            "bookings.html",
+            bookings=bookings
+        )
+
+    except mysql.connector.Error as e:
+
+        return f"Booking Error: {e}"
+
+    finally:
 
         cursor.close()
         db.close()
 
 
-        return redirect("/dashboard")
+# =========================================================
+# BOOK
+# =========================================================
 
+@app.route("/book", methods=["GET", "POST"])
+def book():
 
-    except Exception as e:
-
-        return f"Google Login Error: {e}"
-@app.route("/dashboard")
-def dashboard():
     if "email" not in session:
-        return redirect("/login")
 
-    return "SmartHealth Dashboard - Login Successful!"
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+
+        event_name = request.form["event_name"]
+        event_date = request.form["event_date"]
+        event_time = request.form["event_time"]
+        location = request.form["location"]
+
+        user_id = session.get("user_id")
+
+        db = get_db()
+        cursor = db.cursor()
+
+        try:
+
+            cursor.execute(
+                """
+                INSERT INTO bookings
+                (
+                    user_id,
+                    event_name,
+                    event_date,
+                    event_time,
+                    location
+                )
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    user_id,
+                    event_name,
+                    event_date,
+                    event_time,
+                    location
+                )
+            )
+
+            db.commit()
+
+            return (
+                "Booking successful! "
+                "<a href='/bookings'>View My Bookings</a>"
+            )
+
+        except mysql.connector.Error as e:
+
+            return f"Booking Error: {e}"
+
+        finally:
+
+            cursor.close()
+            db.close()
+
+    return render_template("book.html")
+
 
 # =========================================================
 # LOGOUT
@@ -307,10 +438,11 @@ def logout():
 
     session.clear()
 
-    return redirect("/login")
+    return redirect(url_for("login"))
+
 
 # =========================================================
-# RUN APP
+# RUN APPLICATION
 # =========================================================
 
 if __name__ == "__main__":
