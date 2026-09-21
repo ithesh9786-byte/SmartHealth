@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 from google.oauth2 import id_token
-from google.oauth2 import id_token
 from google.auth.transport import requests
 
 app = Flask(__name__)
