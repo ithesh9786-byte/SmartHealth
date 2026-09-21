@@ -291,7 +291,12 @@ def google_login():
     except Exception as e:
 
         return f"Google Login Error: {e}"
+@app.route("/dashboard")
+def dashboard():
+    if "email" not in session:
+        return redirect("/login")
 
+    return "SmartHealth Dashboard - Login Successful!"
 
 # =========================================================
 # LOGOUT
