@@ -51,7 +51,6 @@ def login():
 
     return render_template("login.html")
      email = user_info["email"]
-
 # Allowed Google test users
 ALLOWED_USERS = {
     "ithesh9786@gmail.com",
