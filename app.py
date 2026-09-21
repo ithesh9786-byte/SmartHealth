@@ -285,7 +285,7 @@ def google_login():
         db.close()
 
 
-        return redirect("/")
+        return redirect("/dashboard")
 
 
     except Exception as e:
@@ -303,7 +303,6 @@ def logout():
     session.clear()
 
     return redirect("/login")
-
 
 # =========================================================
 # RUN APP
