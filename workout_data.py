@@ -332,7 +332,7 @@ WORKOUT_DATA = {
                 "Full Body Stretching - 10 min"
             ]
         }
-  },
+   },
 
     "Athlete": {
 
@@ -668,8 +668,7 @@ WORKOUT_DATA = {
                 "Full Body Stretching - 5 min"
             ]
         }
-
-    };
+   },
 
     "Bodybuilder": {
 
