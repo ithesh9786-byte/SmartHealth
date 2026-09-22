@@ -14,49 +14,29 @@
 
 <div class="container">
 
-    <h1>🏋️ {{ category }}</h1>
+   <h1>🏋️ {{ category }}</h1>
 
-    <h2>📅 Day {{ day }}</h2>
+<h2>📅 Day {{ day }}</h2>
 
-    <div class="workout-box">
+<div class="workout-box">
 
-        <h3>🔥 Today's Workout</h3>
+    <h3>🔥 Today's Workout</h3>
 
-        {% if category == "Sportsman" %}
+    <h3>{{ workout.focus }}</h3>
 
-            <p>🏃 Jogging — 10 Minutes</p>
-            <p>🏋️ Squats — 2 × 10</p>
-            <p>💪 Push-ups — 2 × 8</p>
-            <p>🦵 Lunges — 2 × 8</p>
-            <p>🧘 Plank — 2 × 20 Seconds</p>
+    {% for exercise in workout.exercises %}
+        <p>🏋️ {{ exercise }}</p>
+    {% endfor %}
 
-        {% elif category == "Athlete" %}
-
-            <p>🏃 Sprint — 5 × 30 Seconds</p>
-            <p>🦘 Jump Squats — 3 × 10</p>
-            <p>🏃 Shuttle Run — 4 Rounds</p>
-            <p>💪 Push-ups — 3 × 10</p>
-            <p>🧘 Plank — 3 × 30 Seconds</p>
-
-        {% elif category == "Bodybuilder" %}
-
-            <p>🏋️ Bench Press — 3 × 10</p>
-            <p>💪 Dumbbell Press — 3 × 10</p>
-            <p>💪 Triceps Extension — 3 × 12</p>
-            <p>🧘 Plank — 3 × 30 Seconds</p>
-            <p>🔥 Cool-down — 5 Minutes</p>
-
-        {% endif %}
-
-        <div class="duration">
-            ⏱️ Workout Duration: 30 Minutes
-        </div>
-
-        <button class="complete-btn">
-            ✓ Mark as Complete
-        </button>
-
+    <div class="duration">
+        ⏱️ Workout Duration: {{ workout.duration }} Minutes
     </div>
+
+    <button class="complete-btn">
+        ✓ Mark as Complete
+    </button>
+
+</div>
 
     <br>
 
