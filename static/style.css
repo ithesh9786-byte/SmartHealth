@@ -898,4 +898,75 @@ footer {
         flex-direction: column;
     }
 
+/* ===== SmartHealth New Dashboard Theme ===== */
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #eefcff 0%, #dff7f8 50%, #eefcff 100%);
+    font-family: Arial, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    background: linear-gradient(180deg, #075985 0%, #0878b8 100%);
+    color: white;
+}
+
+/* Sidebar menu */
+.sidebar .menu-item {
+    color: white;
+}
+
+.sidebar .menu-item:hover,
+.sidebar .menu-item.active {
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
+}
+
+/* Dashboard main background */
+.main-content {
+    background: linear-gradient(
+        135deg,
+        #f0fcff 0%,
+        #e4f9fa 50%,
+        #f3fdff 100%
+    );
+}
+
+/* Welcome banner */
+.welcome-card {
+    background: linear-gradient(
+        135deg,
+        #1769e0 0%,
+        #168bd8 50%,
+        #35cdb1 100%
+    );
+}
+
+/* Health cards */
+.health-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 80, 120, 0.08);
+}
+
+/* Quick action cards */
+.service-card {
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 80, 120, 0.08);
+}
+
+/* Sidebar scrollbar */
+.sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.35);
+    border-radius: 10px;
 }
