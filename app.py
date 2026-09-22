@@ -393,15 +393,10 @@ def bookings():
         db.close()
 
 
-# =========================================================
-# BOOK
-# =========================================================
-
 @app.route("/book", methods=["GET", "POST"])
 def book():
 
     if "email" not in session:
-
         return redirect(url_for("login"))
 
     if request.method == "POST":
@@ -428,10 +423,40 @@ def book():
                     event_time,
                     location
                 )
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    user_id,
+                    event_name,
+                    event_date,
+                    event_time,
+                    location
+                )
+            )
 
-                # =========================================================
+            db.commit()
+
+            return (
+                "Booking successful! "
+                "<a href='/bookings'>View My Bookings</a>"
+            )
+
+        except mysql.connector.Error as e:
+
+            return f"Booking Error: {e}"
+
+        finally:
+
+            cursor.close()
+            db.close()
+
+    return render_template("book.html")
+
+
+# =========================================================
 # BMI CALCULATOR
 # =========================================================
+
 
 @app.route("/bmi", methods=["GET", "POST"])
 def bmi():
@@ -444,10 +469,8 @@ def bmi():
         height = float(request.form["height"])
         weight = float(request.form["weight"])
 
-        # Convert cm to meters
         height_m = height / 100
 
-        # BMI calculation
         bmi_value = weight / (height_m * height_m)
         bmi_value = round(bmi_value, 2)
 
