@@ -427,36 +427,44 @@ def book():
                     event_date,
                     event_time,
                     location
-                )@app.route("/bmi", methods=["GET", "POST"])
-                VALUES (%s, %s, %s, %s, %s)
-                """,
-                (
-                    user_id,
-                    event_name,
-                    event_date,
-                    event_time,
-                    location
                 )
-            )
 
-            db.commit()
+                # =========================================================
+# BMI CALCULATOR
+# =========================================================
 
-            return (
-                "Booking successful! "
-                "<a href='/bookings'>View My Bookings</a>"
-            )
+@app.route("/bmi", methods=["GET", "POST"])
+def bmi():
 
-        except mysql.connector.Error as e:
+    bmi_value = None
+    category = None
 
-            return f"Booking Error: {e}"
+    if request.method == "POST":
 
-        finally:
+        height = float(request.form["height"])
+        weight = float(request.form["weight"])
 
-            cursor.close()
-            db.close()
+        # Convert cm to meters
+        height_m = height / 100
 
-    return render_template("book.html")
+        # BMI calculation
+        bmi_value = weight / (height_m * height_m)
+        bmi_value = round(bmi_value, 2)
 
+        if bmi_value < 18.5:
+            category = "Underweight"
+        elif bmi_value < 25:
+            category = "Normal weight"
+        elif bmi_value < 30:
+            category = "Overweight"
+        else:
+            category = "Obesity"
+
+    return render_template(
+        "bmi.html",
+        bmi=bmi_value,
+        category=category
+    )
 
 # =========================================================
 # LOGOUT
