@@ -702,7 +702,11 @@ footer {
 }
 
 
-@media (max-width: 700px) {}
+@media (max-width: 700px) {
+    .service-grid {
+        grid-template-columns: 1fr;
+    }
+}
 
 .service-grid {
     grid-template-columns: 1fr;
