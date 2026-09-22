@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Diet Plan - SmartHealth</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f8fb;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #20557f;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .summary-box {
+            text-align: center;
+
+            padding: 20px;
+
+            background: #eef6fc;
+
+            border-radius: 10px;
+        }
+
+        .summary-box h3 {
+            margin: 0 0 10px;
+
+            color: #20557f;
+        }
+
+        .summary-box .value {
+            font-size: 24px;
+
+            font-weight: bold;
+
+            color: #222;
+        }
+
+        .meal {
+            margin-top: 15px;
+
+            padding: 18px;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+            border-left: 5px solid #20557f;
+        }
+
+        .meal h3 {
+            margin: 0 0 8px;
+
+            color: #20557f;
+        }
+
+        .meal p {
+            margin: 0;
+
+            color: #444;
+
+            line-height: 1.5;
+        }
+
+        .goal {
+            text-align: center;
+
+            margin-bottom: 20px;
+
+            padding: 12px;
+
+            background: #eaf4ff;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            color: #20557f;
+        }
+
+        .no-plan {
+            text-align: center;
+
+            padding: 40px 20px;
+        }
+
+        .no-plan h2 {
+            color: #20557f;
+        }
+
+        .no-plan p {
+            color: #666;
+        }
+
+        .btn {
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 12px 22px;
+
+            background: #20557f;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #17466c;
+        }
+
+        .back {
+            display: block;
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #20557f;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    {% if diet_plan %}
+
+    <div class="header">
+
+        <h1>🥗 My Diet Plan</h1>
+
+        <p>
+            Your latest personalized diet plan
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="goal">
+
+            Goal:
+            {{ diet_plan.goal }}
+
+        </div>
+
+
+        <div class="summary">
+
+            <div class="summary-box">
+
+                <h3>🔥 Calories</h3>
+
+                <div class="value">
+
+                    {{ diet_plan.calories }}
+
+                </div>
+
+                <small>
+                    kcal/day
+                </small>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <h3>💪 Protein</h3>
+
+                <div class="value">
+
+                    {{ diet_plan.protein }} g
+
+                </div>
+
+                <small>
+                    per day
+                </small>
+
+            </div>
+
+
+            <div class="summary-box">
+
+                <h3>📅 Plan ID</h3>
+
+                <div class="value">
+
+                    #{{ diet_plan.id }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            🍽️ Daily Meal Plan
+        </h2>
+
+
+        <div class="meal">
+
+            <h3>🌅 Breakfast</h3>
+
+            <p>
+                {{ diet_plan.breakfast }}
+            </p>
+
+        </div>
+
+
+        <div class="meal">
+
+            <h3>🍎 Morning Snack</h3>
+
+            <p>
+                {{ diet_plan.morning_snack }}
+            </p>
+
+        </div>
+
+
+        <div class="meal">
+
+            <h3>🍛 Lunch</h3>
+
+            <p>
+                {{ diet_plan.lunch }}
+            </p>
+
+        </div>
+
+
+        <div class="meal">
+
+            <h3>🥤 Evening Snack</h3>
+
+            <p>
+                {{ diet_plan.evening_snack }}
+            </p>
+
+        </div>
+
+
+        <div class="meal">
+
+            <h3>🌙 Dinner</h3>
+
+            <p>
+                {{ diet_plan.dinner }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% else %}
+
+    <div class="card no-plan">
+
+        <h2>
+            🥗 No Diet Plan Yet
+        </h2>
+
+        <p>
+            You haven't created a diet plan yet.
+        </p>
+
+        <a
+            href="{{ url_for('diet') }}"
+            class="btn">
+
+            Create Diet Plan
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="back">
+
+        ← Back to Dashboard
+
+    </a>
+
+
+</div>
+
+</body>
+
+</html>
