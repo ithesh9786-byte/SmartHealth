@@ -133,14 +133,15 @@ def login():
         cursor = db.cursor(dictionary=True)
 
         try:
-            cursor.execute(
-                """
-                SELECT id, name, email, password
-                FROM users
-                WHERE email = %s
-                """,
-            )
+            query = """
+    SELECT * FROM users
+    WHERE email = %s
+    AND password = %s
+"""
 
+cursor.execute(query, (email, password))
+)
+              
             user = cursor.fetchone()
 
             if not user:
