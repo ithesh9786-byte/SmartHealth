@@ -898,33 +898,68 @@ footer {
         flex-direction: column;
     }
 
-/* ===== SmartHealth New Dashboard Theme ===== */
+/* ===== SmartHealth Dashboard Theme ===== */
 
 body {
     margin: 0;
-    background: linear-gradient(135deg, #eefcff 0%, #dff7f8 50%, #eefcff 100%);
     font-family: Arial, sans-serif;
+    background: linear-gradient(
+        135deg,
+        #eefcff 0%,
+        #e4f9fa 50%,
+        #f3fdff 100%
+    );
+    color: #222;
 }
 
-/* Sidebar */
+/* SIDEBAR */
 .sidebar {
-    background: linear-gradient(180deg, #075985 0%, #0878b8 100%);
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 240px;
+    height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #075985 0%,
+        #0878b8 100%
+    );
+
     color: white;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+}
+
+/* Sidebar scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.35);
+    border-radius: 10px;
 }
 
 /* Sidebar menu */
-.sidebar .menu-item {
+.nav-item {
     color: white;
 }
 
-.sidebar .menu-item:hover,
-.sidebar .menu-item.active {
-    background: rgba(255, 255, 255, 0.18);
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(255,255,255,0.18);
     color: white;
 }
 
-/* Dashboard main background */
+/* Main dashboard */
 .main-content {
+    margin-left: 240px;
+    min-height: 100vh;
+
     background: linear-gradient(
         135deg,
         #f0fcff 0%,
@@ -944,29 +979,20 @@ body {
 }
 
 /* Health cards */
-.health-card {
+.stat-card {
     background: white;
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(0, 80, 120, 0.08);
 }
 
 /* Quick action cards */
-.service-card {
+.action-card {
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(0, 80, 120, 0.08);
 }
 
-/* Sidebar scrollbar */
-.sidebar {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.35);
-    border-radius: 10px;
+/* Service cards */
+.service-card {
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 80, 120, 0.08);
 }
