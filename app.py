@@ -172,40 +172,69 @@ def login():
 @app.route("/google-login", methods=["POST"])
 def google_login():
 
+    db = None
+    cursor = None
+
     try:
 
-        credential = request.form["credential"]
+        # Get Google credential
+        credential = request.form.get("credential")
 
+        if not credential:
+            return "Google login failed: credential not received."
+
+        # Verify Google ID token
         user_info = id_token.verify_oauth2_token(
             credential,
             requests.Request(),
             CLIENT_ID
         )
 
-        email = user_info["email"]
+        # Check email
+        email = user_info.get("email", "").lower().strip()
+        name = user_info.get("name", "Google User")
 
-        # Check allowed Google users
-        if email.lower() not in {
+        if not email:
+            return "Google login failed: email not received."
+
+        # Check email verification
+        if not user_info.get("email_verified", False):
+            return "Google email is not verified."
+
+        # Allowed users
+        allowed_users = {
             user.lower()
             for user in ALLOWED_USERS
-        }:
+        }
 
-            return "Access denied. This Google account is not registered."
+        if email not in allowed_users:
+            return (
+                "Access denied. This Google account "
+                "is not registered for SmartHealth."
+            )
 
-        name = user_info.get("name", "")
-
+        # Database
         db = get_db()
         cursor = db.cursor(dictionary=True)
 
+        # Check user
         cursor.execute(
-            "SELECT * FROM users WHERE email=%s",
+            """
+            SELECT *
+            FROM users
+            WHERE email = %s
+            """,
             (email,)
         )
 
         user = cursor.fetchone()
 
-        # Create Google user if not already registered
+        # Create user if not exists
         if not user:
+
+            random_password = generate_password_hash(
+                os.urandom(32).hex()
+            )
 
             cursor.execute(
                 """
@@ -216,27 +245,28 @@ def google_login():
                 (
                     name,
                     email,
-                    "GOOGLE_LOGIN"
+                    random_password
                 )
             )
 
             db.commit()
 
-        # Get user again
-        cursor.execute(
-            "SELECT * FROM users WHERE email=%s",
-            (email,)
-        )
+            # Get newly created user
+            cursor.execute(
+                """
+                SELECT *
+                FROM users
+                WHERE email = %s
+                """,
+                (email,)
+            )
 
-        user = cursor.fetchone()
+            user = cursor.fetchone()
 
         # Save session
-        session["user_id"] = user.get("id")
-        session["email"] = email
-        session["name"] = name
-
-        cursor.close()
-        db.close()
+        session["user_id"] = user["id"]
+        session["email"] = user["email"]
+        session["name"] = user["name"]
 
         return redirect(url_for("dashboard"))
 
@@ -244,6 +274,13 @@ def google_login():
 
         return f"Google Login Error: {e}"
 
+    finally:
+
+        if cursor:
+            cursor.close()
+
+        if db:
+            db.close()
 
 # =========================================================
 # REGISTER
