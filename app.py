@@ -163,7 +163,10 @@ def login():
             cursor.close()
             db.close()
 
-    return render_template("login.html")
+    return render_template(
+    "login.html",
+    google_client_id=CLIENT_ID
+)
 
 # =========================================================
 # GOOGLE LOGIN
