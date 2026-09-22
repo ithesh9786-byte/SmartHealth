@@ -666,6 +666,14 @@ def diet():
 def workout_schedule():
     return render_template("workout_schedule.html")
 
+
+@app.route("/workout/<category>")
+def workout_days(category):
+    return render_template(
+        "workout_days.html",
+        category=category
+    )
+    
 # =========================================================
 # MY DIET PLAN
 # =========================================================
