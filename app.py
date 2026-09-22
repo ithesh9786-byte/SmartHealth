@@ -662,6 +662,10 @@ def diet():
         diet_plan=diet_plan
     )
 
+@app.route("/workout-schedule")
+def workout_schedule():
+    return render_template("workout_schedule.html")
+
 # =========================================================
 # MY DIET PLAN
 # =========================================================
