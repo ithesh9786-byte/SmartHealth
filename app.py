@@ -1,8 +1,12 @@
 import os
 
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import send_from_directory
+
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from werkzeug.security import check_password_hash, generate_password_hash
 
 import mysql.connector
 
@@ -16,7 +20,6 @@ app.secret_key = os.environ.get(
     "SECRET_KEY",
     "smarthealth-secret-key"
 )
-
 
 # =========================================================
 # ALLOWED GOOGLE TEST USERS
@@ -75,12 +78,11 @@ CLIENT_ID = (
 # =========================================================
 
 def get_db():
-
     return mysql.connector.connect(
         host=os.environ.get("MYSQL_HOST", "localhost"),
         port=int(os.environ.get("MYSQL_PORT", 3306)),
         user=os.environ.get("MYSQL_USER", "root"),
-        password=os.environ.get("MYSQL_PASSWORD", ""),
+        password=os.environ.get("MYSQL_PASSWORD", "jaihind01@#"),
         database=os.environ.get("MYSQL_DATABASE", "smarthealth")
     )
 
@@ -102,7 +104,11 @@ def home():
     except Exception as e:
 
         return f"MySQL Error: {e}"
+    
 
+@app.route("/")
+def index():
+    return redirect(url_for("login"))
 
 # =========================================================
 # NORMAL LOGIN
@@ -113,55 +119,44 @@ def login():
 
     if request.method == "POST":
 
-        email = request.form["email"]
+        email = request.form["email"].strip()
         password = request.form["password"]
 
         db = get_db()
         cursor = db.cursor(dictionary=True)
 
         try:
-
             cursor.execute(
-                "SELECT * FROM users WHERE email=%s",
+                """
+                SELECT id, name, email, password
+                FROM users
+                WHERE email = %s
+                """,
                 (email,)
             )
 
             user = cursor.fetchone()
 
-            if user:
+            if not user:
+                return "Email not registered."
 
-                try:
+            if not check_password_hash(user["password"], password):
+                return "Wrong password."
 
-                    valid_password = check_password_hash(
-                        user["password"],
-                        password
-                    )
+            session["user_id"] = user["id"]
+            session["email"] = user["email"]
+            session["name"] = user["name"]
 
-                except Exception:
-
-                    valid_password = False
-
-                if valid_password:
-
-                    session["user_id"] = user.get("id")
-                    session["email"] = user["email"]
-                    session["name"] = user.get("name", "")
-
-                    return redirect(url_for("dashboard"))
-
-            return "Invalid email or password."
+            return redirect(url_for("dashboard"))
 
         except Exception as e:
-
             return f"Login Error: {e}"
 
         finally:
-
             cursor.close()
             db.close()
 
     return render_template("login.html")
-
 
 # =========================================================
 # GOOGLE LOGIN
@@ -301,13 +296,40 @@ def register():
 
 @app.route("/dashboard")
 def dashboard():
-
     if "email" not in session:
-
         return redirect(url_for("login"))
 
     return render_template("dashboard.html")
 
+@app.route("/profile")
+def profile():
+
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            """
+            SELECT id, name, email
+            FROM users
+            WHERE email = %s
+            """,
+            (session["email"],)
+        )
+
+        user = cursor.fetchone()
+
+        if not user:
+            return "User not found."
+
+        return render_template("profile.html", user=user)
+
+    finally:
+        cursor.close()
+        db.close()
 
 # =========================================================
 # SERVICES
@@ -440,6 +462,41 @@ def logout():
 
     return redirect(url_for("login"))
 
+@app.route("/bmi", methods=["GET", "POST"])
+def bmi():
+    bmi_value = None
+    category = None
+
+    if request.method == "POST":
+        height = float(request.form["height"])
+        weight = float(request.form["weight"])
+
+        height_m = height / 100
+        bmi_value = weight / (height_m * height_m)
+
+        if bmi_value < 18.5:
+            category = "Underweight"
+        elif bmi_value < 25:
+            category = "Normal weight"
+        elif bmi_value < 30:
+            category = "Overweight"
+        else:
+            category = "Obesity"
+
+    return render_template(
+        "bmi.html",
+        bmi=bmi_value,
+        category=category
+    )
+
+# =========================================================
+# FAVICON
+# =========================================================
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory("static", "icon-192.png")
+
 
 # =========================================================
 # RUN APPLICATION
@@ -449,7 +506,16 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 5000))
 
+    print("")
+    print("========================================")
+    print("        SmartHealth Application")
+    print("========================================")
+    print("")
+    print(f"Open: http://127.0.0.1:{port}/login")
+    print("")
+
     app.run(
         host="0.0.0.0",
-        port=port
+        port=port,
+        debug=True
     )
