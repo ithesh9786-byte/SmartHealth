@@ -3,8 +3,13 @@ import os
 from flask import send_from_directory
 
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
+from flask import send_from_directory
+
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -79,11 +84,11 @@ CLIENT_ID = (
 
 def get_db():
     return mysql.connector.connect(
-        host=os.environ.get("MYSQL_HOST", "mysql-c625123-ithesh9786-147c.l.aivencloud.com"),
-        port=int(os.environ.get("MYSQL_PORT", 27358)),
-        user=os.environ.get("MYSQL_USER", "avnadmin"),
-        password=os.environ.get("MYSQL_PASSWORD", "SmartHealth@2026#Db91!"),
-        database=os.environ.get("MYSQL_DATABASE", "defaultdb")
+        host=os.environ.get("MYSQL_HOST", "localhost"),
+        port=int(os.environ.get("MYSQL_PORT", 3306)),
+        user=os.environ.get("MYSQL_USER", "root"),
+        password=os.environ.get("MYSQL_PASSWORD", "jaihind01@#"),
+        database=os.environ.get("MYSQL_DATABASE", "smarthealth")
     )
 
 
@@ -105,6 +110,7 @@ def home():
 
         return f"MySQL Error: {e}"
     
+    
 
 @app.route("/")
 def index():
@@ -120,6 +126,7 @@ def login():
     if request.method == "POST":
 
         email = request.form["email"].strip()
+        email = request.form["email"].strip()
         password = request.form["password"]
 
         db = get_db()
@@ -127,6 +134,11 @@ def login():
 
         try:
             cursor.execute(
+                """
+                SELECT id, name, email, password
+                FROM users
+                WHERE email = %s
+                """,
                 """
                 SELECT id, name, email, password
                 FROM users
@@ -146,7 +158,17 @@ def login():
             session["user_id"] = user["id"]
             session["email"] = user["email"]
             session["name"] = user["name"]
+            if not user:
+                return "Email not registered."
 
+            if not check_password_hash(user["password"], password):
+                return "Wrong password."
+
+            session["user_id"] = user["id"]
+            session["email"] = user["email"]
+            session["name"] = user["name"]
+
+            return redirect(url_for("dashboard"))
             return redirect(url_for("dashboard"))
 
         except Exception as e:
@@ -420,7 +442,7 @@ def book():
                     event_date,
                     event_time,
                     location
-                )
+                )@app.route("/bmi", methods=["GET", "POST"])
                 VALUES (%s, %s, %s, %s, %s)
                 """,
                 (
@@ -462,7 +484,7 @@ def logout():
 
     return redirect(url_for("login"))
 
-@app.route("/bmi", methods=["GET", "POST"])
+
 def bmi():
     bmi_value = None
     category = None
@@ -497,13 +519,11 @@ def bmi():
 def favicon():
     return send_from_directory("static", "icon-192.png")
 
-
 # =========================================================
 # RUN APPLICATION
 # =========================================================
 
 if __name__ == "__main__":
-
     port = int(os.environ.get("PORT", 5000))
 
     print("")
