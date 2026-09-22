@@ -1,53 +1,205 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SmartHealth Services</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
+<body class="services-page">
 
-    <h1>Health Services</h1>
-    <p>Choose a service for your health needs.</p>
+    <!-- Sidebar -->
+    <aside class="sidebar">
 
-    <div class="dashboard-container">
-
-        <div class="dashboard-card">
-            <h3>General Health Checkup</h3>
-            <p>Basic health examination.</p>
-            <a href="/book">Book Now</a>
+        <div class="logo">
+            <div class="logo-icon">❤</div>
+            <span>SmartHealth</span>
         </div>
 
-        <div class="dashboard-card">
-            <h3>Doctor Consultation</h3>
-            <p>Consult with a doctor.</p>
-            <a href="/book">Book Now</a>
-        </div>
+        <nav>
 
-        <div class="dashboard-card">
-            <h3>Blood Test</h3>
-            <p>Book a blood test.</p>
-            <a href="/book">Book Now</a>
-        </div>
+            <a href="/dashboard" class="nav-item">
+                <span>▦</span>
+                Dashboard
+            </a>
 
-        <div class="dashboard-card">
-            <h3>Dental Checkup</h3>
-            <p>Dental health examination.</p>
-            <a href="/book">Book Now</a>
-        </div>
+            <a href="/services" class="nav-item active">
+                <span>⚕</span>
+                Health Services
+            </a>
 
-        <div class="dashboard-card">
-            <h3>Eye Checkup</h3>
-            <p>Eye health examination.</p>
-            <a href="/book">Book Now</a>
-        </div>
+            <a href="/book" class="nav-item">
+                <span>＋</span>
+                Book Appointment
+            </a>
 
-    </div>
+            <a href="/bookings" class="nav-item">
+                <span>▣</span>
+                My Bookings
+            </a>
 
-    <br>
+        </nav>
 
-    <a href="/dashboard">Back to Dashboard</a>
+        <a href="/logout" class="logout">
+            <span>↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Health Services</h1>
+                <p>Choose a service for your health needs.</p>
+            </div>
+
+            <div class="profile">
+
+                <div class="profile-icon">👤</div>
+
+                <div>
+                    <strong>{{ session.get("name", "User") }}</strong>
+                    <small>{{ session.get("email", "") }}</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Services -->
+        <section>
+
+            <div class="section-title">
+                <div>
+                    <h2>Available Services</h2>
+                    <p>Explore our healthcare services.</p>
+                </div>
+            </div>
+
+
+            <div class="service-grid">
+
+                <div class="service-card">
+
+                    <div class="service-icon">❤</div>
+
+                    <h3>General Health Checkup</h3>
+
+                    <p>
+                        Basic health examination.
+                    </p>
+
+                    <a href="/book" class="service-btn">
+                        Book Now →
+                    </a>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-icon">⚕</div>
+
+                    <h3>Doctor Consultation</h3>
+
+                    <p>
+                        Consult with a doctor.
+                    </p>
+
+                    <a href="/book" class="service-btn">
+                        Book Now →
+                    </a>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-icon">✚</div>
+
+                    <h3>Blood Test</h3>
+
+                    <p>
+                        Book a blood test.
+                    </p>
+
+                    <a href="/book" class="service-btn">
+                        Book Now →
+                    </a>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-icon">🦷</div>
+
+                    <h3>Dental Checkup</h3>
+
+                    <p>
+                        Dental health examination.
+                    </p>
+
+                    <a href="/book" class="service-btn">
+                        Book Now →
+                    </a>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-icon">👁</div>
+
+                    <h3>Eye Checkup</h3>
+
+                    <p>
+                        Eye health examination.
+                    </p>
+
+                    <a href="/book" class="service-btn">
+                        Book Now →
+                    </a>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-icon">⚖</div>
+
+                    <h3>BMI Calculator</h3>
+
+                    <p>
+                        Calculate your Body Mass Index.
+                    </p>
+
+                    <a href="/bmi" class="service-btn">
+                        Calculate BMI →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            <p>© 2026 SmartHealth. Your health, our priority.</p>
+        </footer>
+
+    </main>
 
 </body>
 
