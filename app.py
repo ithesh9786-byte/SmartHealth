@@ -678,7 +678,6 @@ def workout_days(category):
 
 @app.route("/workout/<category>/<int:day>")
 def workout_day(category, day):
-
     workout = WORKOUT_DATA.get(category, {}).get(day)
 
     if not workout:
