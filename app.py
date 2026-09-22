@@ -165,7 +165,7 @@ def login():
 
     return render_template(
     "login.html",
-    google_client_id=CLIENT_ID
+    google_client_id="219197177710-dj8llnafm25i5bmfnf01blt8bgbjftsf.apps.googleusercontent.com"
 )
 
 # =========================================================
