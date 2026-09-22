@@ -139,12 +139,6 @@ def login():
                 FROM users
                 WHERE email = %s
                 """,
-                """
-                SELECT id, name, email, password
-                FROM users
-                WHERE email = %s
-                """,
-                (email,)
             )
 
             user = cursor.fetchone()
