@@ -663,6 +663,47 @@ def diet():
     )
 
 # =========================================================
+# MY DIET PLAN
+# =========================================================
+
+@app.route("/my-diet")
+def my_diet():
+
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            """
+            SELECT *
+            FROM diet_plans
+            WHERE user_id = %s
+            ORDER BY id DESC
+            LIMIT 1
+            """,
+            (session["user_id"],)
+        )
+
+        diet_plan = cursor.fetchone()
+
+        return render_template(
+            "my_diet.html",
+            diet_plan=diet_plan
+        )
+
+    except mysql.connector.Error as e:
+
+        return f"My Diet Error: {e}"
+
+    finally:
+
+        cursor.close()
+        db.close()
+
+# =========================================================
 # LOGOUT
 # =========================================================
 
