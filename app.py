@@ -73,10 +73,8 @@ ALLOWED_USERS = {
 # =========================================================
 
 CLIENT_ID = (
-    "219197177710-dj8llnafm25i5bmfnf01blt8bgbjfts"
-    ".apps.googleusercontent.com"
+    "219197177710-dj8llnafm25i5bmfnf01blt8bgbjftsf.apps.googleusercontent.com"
 )
-
 
 # =========================================================
 # MYSQL CONNECTION
@@ -165,7 +163,7 @@ def login():
 
     return render_template(
     "login.html",
-    google_client_id="219197177710-dj8llnafm25i5bmfnf01blt8bgbjfts.apps.googleusercontent.com"
+    google_client_id="219197177710-dj8llnafm25i5bmfnf01blt8bgbjftsf.apps.googleusercontent.com"
 )
 
 # =========================================================
