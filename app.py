@@ -2,6 +2,8 @@ import os
 
 from flask import send_from_directory
 
+from workout_data import WORKOUT_DATA
+
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 from flask import send_from_directory
 
