@@ -1,43 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SmartHealth Login</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="icon" href="data:,">
 </head>
 
-<body>
+<body class="bg-[#2d79b3] min-h-screen flex items-center justify-center p-4">
 
-    <h1>SmartHealth Login</h1>
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-lg text-center">
 
-    <form method="POST" action="/login">
+        <!-- Logo -->
+        <div class="flex justify-center mb-2">
+            <span class="text-blue-500 text-3xl">💙</span>
+        </div>
 
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
+        <!-- Title -->
+        <h2 class="text-2xl font-bold text-[#1a4a75] mb-1">
+            SmartHealth
+        </h2>
 
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
+        <p class="text-gray-500 text-sm mb-6">
+            Welcome back! Please login to your account.
+        </p>
 
-        <button type="submit">Login</button>
+        <!-- Error / Success Message -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-    </form>
-    <h3>OR</h3>
 
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <!-- Login Form -->
+        <form action="{{ url_for('login') }}" method="POST" class="text-left">
 
-    <div id="g_id_onload" data-client_id="219197177710-dj8llnafm25i5bmfnf01blt8bgbjftsf.apps.googleusercontent.com"
-        data-context="signin" data-ux_mode="popup" data-callback="handleCredentialResponse">
+            <!-- Email -->
+            <div class="mb-4">
+
+                <label class="block text-gray-700 font-medium mb-1 text-sm">
+                    Email
+                </label>
+
+                <input type="email" name="email" required placeholder="admin@gmail.com"
+                    class="w-full px-4 py-2 bg-blue-50/50 border border-blue-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+
+            </div>
+
+
+            <!-- Password -->
+            <div class="mb-6">
+
+                <label class="block text-gray-700 font-medium mb-1 text-sm">
+                    Password
+                </label>
+
+                <div class="relative">
+
+                    <input type="password" id="password" name="password" required placeholder="••••••"
+                        class="w-full px-4 py-2 pr-12 bg-blue-50/50 border border-blue-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+
+                    <!-- Show / Hide Password -->
+                    <button type="button" id="togglePassword" onclick="togglePasswordVisibility()"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+                        title="Show password">
+                        👁️
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Login Button -->
+            <button type="submit"
+                class="w-full bg-[#1a4a75] text-white py-2 rounded-lg font-medium hover:bg-[#153b5e] transition duration-200">
+                Login
+            </button>
+
+        </form>
+
+
+        <!-- OR -->
+        <div class="relative flex py-4 items-center justify-center">
+
+            <div class="flex-grow border-t border-gray-200"></div>
+
+            <span class="flex-shrink mx-4 text-gray-400 text-xs uppercase">
+                OR
+            </span>
+
+            <div class="flex-grow border-t border-gray-200"></div>
+
+        </div>
+
+
+        <!-- Google Button -->
+        <button type="button"
+            class="w-full border border-gray-200 rounded-lg py-2 flex items-center justify-center text-sm font-medium text-gray-600 hover:bg-gray-50 transition mb-6">
+            <span class="mr-2 text-lg">G</span>
+            Sign in with Google
+        </button>
+
+
+        <!-- REGISTER OPTION -->
+        <div class="border-t border-gray-100 pt-5">
+
+            <p class="text-gray-500 text-sm">
+
+                Don't have an account?
+
+                <a href="{{ url_for('register') }}" class="text-blue-600 font-semibold hover:underline">
+                    Register here
+                </a>
+
+            </p>
+
+        </div>
+
+
+        <!-- Copyright -->
+        <p class="text-gray-400 text-xs mt-5">
+            © 2026 SmartHealth
+        </p>
+
     </div>
 
-    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="signin_with"
-        data-shape="rectangular">
-    </div>
 
+    <!-- Show / Hide Password JavaScript -->
     <script>
-        function handleCredentialResponse(response) {
-            window.location.href = "/dashboard";
+
+        function togglePasswordVisibility() {
+
+            const passwordInput = document.getElementById("password");
+            const toggleButton = document.getElementById("togglePassword");
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+
+                toggleButton.textContent = "🙈";
+                toggleButton.title = "Hide password";
+
+            } else {
+
+                passwordInput.type = "password";
+
+                toggleButton.textContent = "👁️";
+                toggleButton.title = "Show password";
+
+            }
         }
+
     </script>
 
 </body>
+
+</html>
