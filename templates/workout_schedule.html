@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Schedule - SmartHealth</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🏋️ Workout Schedule</h1>
+    <p>Select your workout type</p>
+
+    <div class="workout-options">
+
+        <a href="{{ url_for('workout_days', category='Sportsman') }}"
+           class="workout-card">
+            <h2>🏃 Sportsman</h2>
+            <p>30 Day Workout Plan</p>
+        </a>
+
+        <a href="{{ url_for('workout_days', category='Athlete') }}"
+           class="workout-card">
+            <h2>🏅 Athlete</h2>
+            <p>30 Day Workout Plan</p>
+        </a>
+
+        <a href="{{ url_for('workout_days', category='Bodybuilder') }}"
+           class="workout-card">
+            <h2>💪 Bodybuilder</h2>
+            <p>30 Day Workout Plan</p>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
