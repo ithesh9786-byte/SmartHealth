@@ -16,13 +16,19 @@ body {
     top: 0;
     width: 240px;
     height: 100vh;
-    background: #1f4e79;
-    color: white;
-    padding: 25px 18px;
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+}
 .logo {
     display: flex;
     align-items: center;
