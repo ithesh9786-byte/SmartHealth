@@ -528,6 +528,141 @@ def bmi():
     )
 
 # =========================================================
+# DIET MANAGEMENT
+# =========================================================
+
+@app.route("/diet", methods=["GET", "POST"])
+def diet():
+
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    diet_plan = None
+
+    if request.method == "POST":
+
+        age = int(request.form["age"])
+        gender = request.form["gender"]
+        height = float(request.form["height"])
+        weight = float(request.form["weight"])
+        goal = request.form["goal"]
+        activity = request.form["activity"]
+
+        # BMI
+        height_m = height / 100
+        bmi = weight / (height_m * height_m)
+
+        # Basic calorie calculation
+        if gender == "Male":
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5
+        else:
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161
+
+        # Activity multiplier
+        if activity == "Low":
+            calories = bmr * 1.2
+        elif activity == "Moderate":
+            calories = bmr * 1.55
+        else:
+            calories = bmr * 1.725
+
+        # Goal adjustment
+        if goal == "Weight Gain":
+            calories += 300
+            protein = int(weight * 1.6)
+
+            breakfast = "Oats + Milk + Banana + Eggs"
+            morning_snack = "Nuts + Fruit"
+            lunch = "Rice + Chicken/Paneer + Vegetables"
+            evening_snack = "Banana Shake + Peanut Butter"
+            dinner = "Chapati/Rice + Eggs + Vegetables"
+
+        elif goal == "Weight Loss":
+            calories -= 300
+            protein = int(weight * 1.6)
+
+            breakfast = "Oats + Eggs + Fruit"
+            morning_snack = "Fruit + Nuts"
+            lunch = "Rice + Vegetables + Chicken/Paneer"
+            evening_snack = "Green Tea + Fruit"
+            dinner = "Chapati + Vegetables + Protein"
+
+        else:
+            calories = calories
+            protein = int(weight * 1.2)
+
+            breakfast = "Oats + Milk + Eggs"
+            morning_snack = "Fruit + Nuts"
+            lunch = "Rice + Vegetables + Protein"
+            evening_snack = "Fruit + Yogurt"
+            dinner = "Chapati + Vegetables + Eggs"
+
+        calories = int(calories)
+
+        # Save to MySQL
+        db = get_db()
+        cursor = db.cursor()
+
+        try:
+
+            cursor.execute(
+                """
+                INSERT INTO diet_plans
+                (
+                    user_id,
+                    goal,
+                    calories,
+                    protein,
+                    breakfast,
+                    morning_snack,
+                    lunch,
+                    evening_snack,
+                    dinner
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    session["user_id"],
+                    goal,
+                    calories,
+                    protein,
+                    breakfast,
+                    morning_snack,
+                    lunch,
+                    evening_snack,
+                    dinner
+                )
+            )
+
+            db.commit()
+
+            diet_plan = {
+                "bmi": round(bmi, 2),
+                "goal": goal,
+                "calories": calories,
+                "protein": protein,
+                "breakfast": breakfast,
+                "morning_snack": morning_snack,
+                "lunch": lunch,
+                "evening_snack": evening_snack,
+                "dinner": dinner
+            }
+
+        except mysql.connector.Error as e:
+
+            return f"Diet Error: {e}"
+
+        finally:
+
+            cursor.close()
+            db.close()
+
+    return render_template(
+        "diet.html",
+        diet_plan=diet_plan
+    )
+
+# =========================================================
 # LOGOUT
 # =========================================================
 
