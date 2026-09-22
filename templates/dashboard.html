@@ -1,43 +1,223 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SmartHealth Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon-192.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#0d9488">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
+
 <body>
 
-    <h1>SmartHealth Dashboard</h1>
+    <aside class="sidebar">
 
-    <h2>Welcome to SmartHealth!</h2>
-
-    <div class="dashboard-container">
-
-        <div class="dashboard-card">
-            <h3>Health Services</h3>
-            <p>View available health services.</p>
-            <a href="/services">View Services</a>
+        <div class="logo">
+            <div class="logo-icon">❤</div>
+            <span>SmartHealth</span>
         </div>
 
-        <div class="dashboard-card">
-            <h3>Book Appointment</h3>
-            <p>Book a health service.</p>
-            <a href="/book">Book Now</a>
-        </div>
+        <nav>
+            <a href="/dashboard" class="nav-item active">
+                <span>▦</span>
+                Dashboard
+            </a>
 
-        <div class="dashboard-card">
-            <h3>My Bookings</h3>
-            <p>View your booked services.</p>
-            <a href="/bookings">My Bookings</a>
-        </div>
+            <a href="/services" class="nav-item">
+                <span>⚕</span>
+                Health Services
+            </a>
 
-    </div>
+            <a href="/book" class="nav-item">
+                <span>＋</span>
+                Book Appointment
+            </a>
 
-    <br>
+            <a href="/bookings" class="nav-item">
+                <span>▣</span>
+                My Bookings
+            </a>
 
-    <a href="/logout">Logout</a>
+            <a href="/bmi" class="nav-item">
+                <span>⚖</span>
+                BMI Calculator
+            </a>
+        </nav>
 
+        <a href="/logout" class="logout">
+            <span>↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Your health, simplified.</p>
+            </div>
+
+            <div class="profile">
+                <div class="profile-icon">👤</div>
+
+                <div>
+                    <strong>{{ session.get("name", "User") }}</strong>
+                    <small>{{ session.get("email", "") }}</small>
+                </div>
+            </div>
+            <a href="{{ url_for('profile') }}" class="primary-btn">
+                View Profile
+            </a>
+
+        </header>
+
+        <section class="welcome-card">
+
+            <div>
+                <span class="welcome-label">WELCOME BACK 👋</span>
+
+                <h2>
+                    Hello, {{ session.get("name", "User") }}!
+                </h2>
+
+                <p>
+                    Manage your health services and appointments
+                    from one place.
+                </p>
+
+                <a href="/services" class="primary-btn">
+                    Explore Services →
+                </a>
+            </div>
+
+            <div class="welcome-heart">
+                ❤
+            </div>
+
+        </section>
+
+        <section>
+
+            <div class="section-title">
+                <div>
+                    <h2>Health Overview</h2>
+                    <p>Keep track of your basic health information.</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-icon heart">❤</div>
+                    <div>
+                        <p>Heart Rate</p>
+                        <h3>72 <span>BPM</span></h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon weight">⚖</div>
+                    <div>
+                        <p>Weight</p>
+                        <h3>-- <span>kg</span></h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon pressure">♥</div>
+                    <div>
+                        <p>Blood Pressure</p>
+                        <h3>-- <span>mmHg</span></h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon sugar">✚</div>
+                    <div>
+                        <p>Blood Sugar</p>
+                        <h3>-- <span>mg/dL</span></h3>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section>
+
+            <div class="section-title">
+                <div>
+                    <h2>Quick Actions</h2>
+                    <p>Access your most-used health services.</p>
+                </div>
+            </div>
+
+            <div class="actions-grid">
+
+                <a href="/services" class="action-card">
+                    <div class="action-icon">⚕</div>
+
+                    <div>
+                        <h3>Health Services</h3>
+                        <p>Explore available services</p>
+                    </div>
+
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="/book" class="action-card">
+                    <div class="action-icon">📅</div>
+
+                    <div>
+                        <h3>Book Appointment</h3>
+                        <p>Schedule a health service</p>
+                    </div>
+
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="/bookings" class="action-card">
+                    <div class="action-icon">📋</div>
+
+                    <div>
+                        <h3>My Bookings</h3>
+                        <p>View your appointments</p>
+                    </div>
+
+                    <span class="arrow">→</span>
+                </a>
+
+            </div>
+
+        </section>
+
+        <footer>
+            <p>© 2026 SmartHealth. Your health, our priority.</p>
+        </footer>
+
+    </main>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("/sw.js")
+                    .then(function (registration) {
+                        console.log("SmartHealth Service Worker Registered");
+                    })
+                    .catch(function (error) {
+                        console.error("Service Worker Error:", error);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>
