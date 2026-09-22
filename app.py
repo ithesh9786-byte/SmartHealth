@@ -126,44 +126,34 @@ def login():
     if request.method == "POST":
 
         email = request.form["email"].strip()
-        email = request.form["email"].strip()
         password = request.form["password"]
 
         db = get_db()
         cursor = db.cursor(dictionary=True)
 
         try:
+            # Get user only by email
             query = """
-    SELECT * FROM users
-    WHERE email = %s
-    AND password = %s
-"""
+                SELECT * FROM users
+                WHERE email = %s
+            """
 
-cursor.execute(query, (email, password))
-)
-              
+            cursor.execute(query, (email,))
+
             user = cursor.fetchone()
 
             if not user:
                 return "Email not registered."
 
+            # Check hashed password
             if not check_password_hash(user["password"], password):
                 return "Wrong password."
 
-            session["user_id"] = user["id"]
-            session["email"] = user["email"]
-            session["name"] = user["name"]
-            if not user:
-                return "Email not registered."
-
-            if not check_password_hash(user["password"], password):
-                return "Wrong password."
-
+            # Save login session
             session["user_id"] = user["id"]
             session["email"] = user["email"]
             session["name"] = user["name"]
 
-            return redirect(url_for("dashboard"))
             return redirect(url_for("dashboard"))
 
         except Exception as e:
