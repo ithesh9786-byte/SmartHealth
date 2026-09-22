@@ -1,51 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SmartHealth Booking</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <h1>Book a Health Service</h1>
+    <div class="booking-page">
 
-    <form method="POST" action="/book">
+        <div class="booking-card">
 
-        <label>Health Service:</label><br>
-        <select name="event_name" required>
-            <option value="">Select a service</option>
-            <option value="General Health Checkup">General Health Checkup</option>
-            <option value="Doctor Consultation">Doctor Consultation</option>
-            <option value="Blood Test">Blood Test</option>
-            <option value="Dental Checkup">Dental Checkup</option>
-            <option value="Eye Checkup">Eye Checkup</option>
-        </select>
+            <h1>Book a Health Service</h1>
 
-        <br><br>
+            <p>Schedule your health service appointment.</p>
 
-        <label>Date:</label><br>
-        <input type="date" name="event_date" required>
+            <form method="POST" action="/book">
 
-        <br><br>
+                <label>Health Service</label>
 
-        <label>Time:</label><br>
-        <input type="time" name="event_time" required>
+                <select name="event_name" required>
+                    <option value="">Select a service</option>
+                    <option value="General Health Checkup">General Health Checkup</option>
+                    <option value="Doctor Consultation">Doctor Consultation</option>
+                    <option value="Blood Test">Blood Test</option>
+                    <option value="Dental Checkup">Dental Checkup</option>
+                    <option value="Eye Checkup">Eye Checkup</option>
+                </select>
 
-        <br><br>
+                <label>Date</label>
+                <input type="date" name="event_date" required>
 
-        <label>Location:</label><br>
-        <input type="text" name="location" placeholder="Enter location" required>
+                <label>Time</label>
+                <input type="time" name="event_time" required>
 
-        <br><br>
+                <label>Location</label>
+                <input type="text" name="location" placeholder="Enter location" required>
 
-        <button type="submit">Book Now</button>
+                <button type="submit">Book Appointment</button>
 
-    </form>
+            </form>
 
-    <br>
+            <br>
 
-    <a href="/dashboard">Back to Dashboard</a>
+            <a href="/dashboard">← Back to Dashboard</a>
+
+        </div>
+
+    </div>
 
 </body>
 
