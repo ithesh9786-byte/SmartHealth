@@ -79,11 +79,11 @@ CLIENT_ID = (
 
 def get_db():
     return mysql.connector.connect(
-        host=os.environ.get("MYSQL_HOST", "localhost"),
-        port=int(os.environ.get("MYSQL_PORT", 3306)),
-        user=os.environ.get("MYSQL_USER", "root"),
-        password=os.environ.get("MYSQL_PASSWORD", "jaihind01@#"),
-        database=os.environ.get("MYSQL_DATABASE", "smarthealth")
+        host=os.environ.get("MYSQL_HOST", "mysql-c625123-ithesh9786-147c.l.aivencloud.com"),
+        port=int(os.environ.get("MYSQL_PORT", 27358)),
+        user=os.environ.get("MYSQL_USER", "avnadmin"),
+        password=os.environ.get("MYSQL_PASSWORD", "SmartHealth@2026#Db91!"),
+        database=os.environ.get("MYSQL_DATABASE", "defaultdb")
     )
 
 
