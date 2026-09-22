@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category }} - Workout Schedule</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🏋️ {{ category }}</h1>
+    <h3>📅 One Month Workout Plan</h3>
+
+    <div class="day-grid">
+
+        {% for day in range(1, 31) %}
+
+        <a href="{{ url_for('workout_day',
+                            category=category,
+                            day=day) }}"
+           class="day-card">
+
+            <span>DAY</span>
+            <strong>{{ day }}</strong>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+    <br>
+
+    <a href="{{ url_for('workout_schedule') }}" class="back-btn">
+        ← Back
+    </a>
+
+</div>
+
+</body>
+</html>
