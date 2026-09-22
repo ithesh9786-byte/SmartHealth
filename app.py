@@ -673,6 +673,14 @@ def workout_days(category):
         "workout_days.html",
         category=category
     )
+
+@app.route("/workout/<category>/<int:day>")
+def workout_day(category, day):
+    return render_template(
+        "workout_day.html",
+        category=category,
+        day=day
+    )
     
 # =========================================================
 # MY DIET PLAN
