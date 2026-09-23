@@ -376,7 +376,6 @@ def register():
 
     return render_template("register.html")
 
-
 # =========================================================
 # DASHBOARD
 # =========================================================
@@ -391,6 +390,10 @@ def dashboard():
     cursor = db.cursor(dictionary=True)
 
     try:
+
+        # =============================================
+        # USER DETAILS
+        # =============================================
 
         cursor.execute(
             """
@@ -410,12 +413,45 @@ def dashboard():
         if not user:
             return "User not found.", 404
 
+
+        # =============================================
+        # LATEST HEALTH DATA
+        # =============================================
+
+        cursor.execute(
+            """
+            SELECT
+                heart_rate,
+                weight,
+                blood_pressure,
+                blood_sugar
+            FROM health_records
+            WHERE user_id = %s
+            ORDER BY id DESC
+            LIMIT 1
+            """,
+            (session["user_id"],)
+        )
+
+        health_data = cursor.fetchone()
+
+
+        # =============================================
+        # AVATAR INITIALS
+        # =============================================
+
         initials = get_initials(user["name"])
+
+
+        # =============================================
+        # DASHBOARD
+        # =============================================
 
         return render_template(
             "dashboard.html",
             user=user,
-            initials=initials
+            initials=initials,
+            health_data=health_data
         )
 
     finally:
