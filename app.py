@@ -645,6 +645,95 @@ def profile():
         db.close()
 
 # =========================================================
+# HEALTH RECORD
+# =========================================================
+
+@app.route("/health", methods=["GET", "POST"])
+def health():
+
+    if "email" not in session:
+        return redirect(url_for("login"))
+
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+
+        if request.method == "POST":
+
+            heart_rate = request.form.get("heart_rate") or None
+            weight = request.form.get("weight") or None
+            blood_pressure = request.form.get("blood_pressure") or None
+            blood_sugar = request.form.get("blood_sugar") or None
+
+            cursor.execute(
+                """
+                INSERT INTO health_records
+                (
+                    user_id,
+                    heart_rate,
+                    weight,
+                    blood_pressure,
+                    blood_sugar
+                )
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    session["user_id"],
+                    heart_rate,
+                    weight,
+                    blood_pressure,
+                    blood_sugar
+                )
+            )
+
+            db.commit()
+
+            flash("Health information saved successfully!")
+
+            return redirect(url_for("health"))
+
+
+        # Get latest health record
+
+        cursor.execute(
+            """
+            SELECT
+                heart_rate,
+                weight,
+                blood_pressure,
+                blood_sugar,
+                created_at
+            FROM health_records
+            WHERE user_id = %s
+            ORDER BY id DESC
+            LIMIT 1
+            """,
+            (session["user_id"],)
+        )
+
+        health_data = cursor.fetchone()
+
+
+        return render_template(
+            "health.html",
+            health_data=health_data
+        )
+
+
+    except mysql.connector.Error as e:
+
+        db.rollback()
+
+        return f"Health Error: {e}"
+
+
+    finally:
+
+        cursor.close()
+        db.close()
+
+# =========================================================
 # SERVICES
 # =========================================================
 
