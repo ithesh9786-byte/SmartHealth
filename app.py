@@ -369,7 +369,7 @@ def dashboard():
 
     return render_template("dashboard.html")
 
-@app.route("/profile")
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
 
     if "email" not in session:
@@ -379,23 +379,242 @@ def profile():
     cursor = db.cursor(dictionary=True)
 
     try:
+
+        # ==================================
+        # UPDATE PROFILE
+        # ==================================
+
+        if request.method == "POST":
+
+            name = request.form.get("name", "").strip()
+            email = request.form.get("email", "").strip().lower()
+            phone = request.form.get("phone", "").strip()
+
+            date_of_birth = (
+                request.form.get("date_of_birth")
+                or None
+            )
+
+            gender = (
+                request.form.get("gender")
+                or None
+            )
+
+            location = request.form.get(
+                "location",
+                ""
+            ).strip()
+
+
+            # Required fields
+
+            if not name or not email:
+
+                flash(
+                    "Name and email are required."
+                )
+
+                return redirect(
+                    url_for("profile")
+                )
+
+
+            # ==================================
+            # GET OLD PROFILE IMAGE
+            # ==================================
+
+            cursor.execute(
+                """
+                SELECT profile_image
+                FROM users
+                WHERE id = %s
+                """,
+                (session["user_id"],)
+            )
+
+            old_user = cursor.fetchone()
+
+            profile_image = (
+                old_user["profile_image"]
+                if old_user
+                else None
+            )
+
+
+            # ==================================
+            # PROFILE PHOTO
+            # ==================================
+
+            photo = request.files.get(
+                "profile_image"
+            )
+
+            if photo and photo.filename:
+
+                filename = secure_filename(
+                    photo.filename
+                )
+
+                if "." not in filename:
+
+                    flash(
+                        "Invalid image file."
+                    )
+
+                    return redirect(
+                        url_for("profile")
+                    )
+
+
+                extension = (
+                    filename
+                    .rsplit(".", 1)[1]
+                    .lower()
+                )
+
+
+                if extension not in ALLOWED_EXTENSIONS:
+
+                    flash(
+                        "Only image files are allowed."
+                    )
+
+                    return redirect(
+                        url_for("profile")
+                    )
+
+
+                new_filename = (
+                    f"user_{session['user_id']}."
+                    f"{extension}"
+                )
+
+
+                photo.save(
+                    os.path.join(
+                        app.config["UPLOAD_FOLDER"],
+                        new_filename
+                    )
+                )
+
+
+                profile_image = (
+                    f"uploads/{new_filename}"
+                )
+
+
+            # ==================================
+            # UPDATE MYSQL
+            # ==================================
+
+            cursor.execute(
+                """
+                UPDATE users
+                SET
+                    name = %s,
+                    email = %s,
+                    phone = %s,
+                    date_of_birth = %s,
+                    gender = %s,
+                    location = %s,
+                    profile_image = %s
+                WHERE id = %s
+                """,
+                (
+                    name,
+                    email,
+                    phone,
+                    date_of_birth,
+                    gender,
+                    location,
+                    profile_image,
+                    session["user_id"]
+                )
+            )
+
+            db.commit()
+
+
+            # ==================================
+            # UPDATE SESSION
+            # ==================================
+
+            session["name"] = name
+            session["email"] = email
+
+
+            flash(
+                "Profile updated successfully!"
+            )
+
+            return redirect(
+                url_for("profile")
+            )
+
+
+        # ==================================
+        # LOAD PROFILE
+        # ==================================
+
         cursor.execute(
             """
-            SELECT id, name, email
+            SELECT
+                id,
+                name,
+                email,
+                phone,
+                date_of_birth,
+                gender,
+                location,
+                profile_image
             FROM users
-            WHERE email = %s
+            WHERE id = %s
             """,
-            (session["email"],)
+            (session["user_id"],)
         )
 
         user = cursor.fetchone()
 
-        if not user:
-            return "User not found."
 
-        return render_template("profile.html", user=user)
+        if not user:
+
+            return "User not found.", 404
+
+
+        initials = get_initials(
+            user["name"]
+        )
+
+
+        return render_template(
+            "profile.html",
+            user=user,
+            initials=initials
+        )
+
+
+    except mysql.connector.IntegrityError:
+
+        db.rollback()
+
+        flash(
+            "This email is already used."
+        )
+
+        return redirect(
+            url_for("profile")
+        )
+
+
+    except Exception as e:
+
+        db.rollback()
+
+        return f"Profile Error: {e}"
+
 
     finally:
+
         cursor.close()
         db.close()
 
