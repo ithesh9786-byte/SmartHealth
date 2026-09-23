@@ -112,6 +112,25 @@ def get_db():
         database=os.environ.get("MYSQL_DATABASE", "defaultdb")
     )
 
+# =========================================================
+# PROFILE AVATAR - INITIALS
+# =========================================================
+
+def get_initials(name):
+
+    parts = [
+        part
+        for part in (name or "").strip().split()
+        if part
+    ]
+
+    if not parts:
+        return "U"
+
+    return "".join(
+        part[0]
+        for part in parts[:2]
+    ).upper()
 
 # =========================================================
 # HOME
