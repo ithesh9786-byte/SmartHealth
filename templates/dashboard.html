@@ -6,241 +6,784 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SmartHealth Dashboard</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon-192.png') }}">
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <link rel="icon"
+          type="image/png"
+          href="{{ url_for('static', filename='icon-192.png') }}">
+
+    <link rel="manifest"
+          href="{{ url_for('static', filename='manifest.json') }}">
+
     <meta name="theme-color" content="#0d9488">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+
+    <style>
+
+        /* =========================================
+           PROFILE AVATAR
+        ========================================= */
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .profile-icon {
+            width: 50px;
+            height: 50px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1268ef,
+                    #20c7f4
+                );
+
+            color: white;
+
+            font-size: 16px;
+            font-weight: 800;
+
+            border: 3px solid rgba(255,255,255,0.9);
+
+            box-shadow:
+                0 7px 20px rgba(20,120,255,0.20);
+
+            flex-shrink: 0;
+        }
+
+
+        .profile-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .profile-info strong {
+            color: #173556;
+            font-size: 14px;
+        }
+
+
+        .profile-info small {
+            color: #7d8fa7;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+
+        .profile-link:hover .profile-icon {
+            transform: scale(1.05);
+        }
+
+
+        .profile-icon {
+            transition: 0.2s ease;
+        }
+
+
+        /* =========================================
+           PROFILE BUTTON
+        ========================================= */
+
+        .profile-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 11px 17px;
+
+            border-radius: 12px;
+
+            background: #edf6ff;
+
+            color: #1677e8;
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            border: 1px solid #dcecff;
+
+            transition: 0.2s ease;
+        }
+
+
+        .profile-btn:hover {
+            background: #e2f1ff;
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================
+           TOPBAR PROFILE AREA
+        ========================================= */
+
+        .profile-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+
+        /* =========================================
+           NAV ITEM
+        ========================================= */
+
+        .nav-item {
+            text-decoration: none;
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 700px) {
+
+            .profile-info {
+                display: none;
+            }
+
+            .profile-area {
+                gap: 8px;
+            }
+
+            .profile-btn {
+                display: none;
+            }
+
+        }
+
+    </style>
+
 </head>
 
 
 <body>
 
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
     <aside class="sidebar">
 
+
+        <!-- LOGO -->
+
         <div class="logo">
-            <div class="logo-icon">❤</div>
-            <span>SmartHealth</span>
+
+            <div class="logo-icon">
+                ❤
+            </div>
+
+            <span>
+                SmartHealth
+            </span>
+
         </div>
 
+
+        <!-- NAVIGATION -->
+
         <nav>
-            <a href="/dashboard" class="nav-item active">
+
+
+            <a href="/dashboard"
+               class="nav-item active">
+
                 <span>▦</span>
+
                 Dashboard
+
             </a>
 
-            <a href="/services" class="nav-item">
+
+            <a href="/services"
+               class="nav-item">
+
                 <span>⚕</span>
+
                 Health Services
+
             </a>
 
-            <a href="/book" class="nav-item">
+
+            <a href="/book"
+               class="nav-item">
+
                 <span>＋</span>
+
                 Book Appointment
+
             </a>
 
-            <a href="/bookings" class="nav-item">
+
+            <a href="/bookings"
+               class="nav-item">
+
                 <span>▣</span>
+
                 My Bookings
+
             </a>
 
-            <a href="/bmi" class="nav-item">
+
+            <a href="/bmi"
+               class="nav-item">
+
                 <span>⚖</span>
+
                 BMI Calculator
+
             </a>
 
-            <a href="{{ url_for('diet') }}" class="service-card">
-    <div class="icon">🥗</div>
-    <h3>Diet Management</h3>
-    <p>Get a personalized diet plan.</p>
-                
-    <a href="{{ url_for('workout_schedule') }}" class="service-card">
-    <div class="icon">🏋️</div>
-    <h3>Workout Schedule</h3>
-    <p>Get your personalized 30-day workout plan.</p>
-</a>
 
-    <a href="{{ url_for('my_diet') }}" class="service-card">
+            <a href="{{ url_for('diet') }}"
+               class="nav-item">
 
-    <div class="icon">📋</div>
+                <span>🥗</span>
 
-    <h3>My Diet Plan</h3>
+                Diet Management
 
-    <p>
-        View your saved personalized diet plan.
-    </p>
+            </a>
 
-</a>
+
+            <a href="{{ url_for('workout_schedule') }}"
+               class="nav-item">
+
+                <span>🏋️</span>
+
+                Workout Schedule
+
+            </a>
+
+
+            <a href="{{ url_for('my_diet') }}"
+               class="nav-item">
+
+                <span>📋</span>
+
+                My Diet Plan
+
+            </a>
+
+
         </nav>
 
-        <a href="/logout" class="logout">
-            <span>↪</span>
+
+        <!-- LOGOUT -->
+
+        <a href="/logout"
+           class="logout">
+
+            <span>
+                ↪
+            </span>
+
             Logout
+
         </a>
+
 
     </aside>
 
+
+
+    <!-- =================================================
+         MAIN CONTENT
+    ================================================== -->
+
     <main class="main-content">
+
+
+        <!-- =================================================
+             TOP BAR
+        ================================================== -->
 
         <header class="topbar">
 
+
             <div>
-                <h1>Dashboard</h1>
-                <p>Your health, simplified.</p>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Your health, simplified.
+                </p>
+
             </div>
 
-            <div class="profile">
-                <div class="profile-icon">👤</div>
 
-                <div>
-                    <strong>{{ session.get("name", "User") }}</strong>
-                    <small>{{ session.get("email", "") }}</small>
-                </div>
+            <!-- PROFILE AREA -->
+
+            <div class="profile-area">
+
+
+                <a href="{{ url_for('profile') }}"
+                   class="profile-link">
+
+                    <div class="profile">
+
+
+                        <!-- AVATAR -->
+
+                        <div class="profile-icon">
+
+
+                            {% if user.profile_image %}
+
+                                <img
+                                    src="{{ url_for(
+                                        'static',
+                                        filename=user.profile_image
+                                    ) }}"
+                                    alt="Profile Photo"
+                                >
+
+                            {% else %}
+
+                                {{ initials }}
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                        <!-- USER INFO -->
+
+                        <div class="profile-info">
+
+                            <strong>
+                                {{ user.name }}
+                            </strong>
+
+                            <small>
+                                {{ user.email }}
+                            </small>
+
+                        </div>
+
+
+                    </div>
+
+                </a>
+
+
+                <!-- VIEW PROFILE -->
+
+                <a href="{{ url_for('profile') }}"
+                   class="profile-btn">
+
+                    View Profile
+
+                </a>
+
+
             </div>
-            <a href="{{ url_for('profile') }}" class="primary-btn">
-                View Profile
-            </a>
+
 
         </header>
 
+
+
+        <!-- =================================================
+             WELCOME CARD
+        ================================================== -->
+
         <section class="welcome-card">
 
+
             <div>
-                <span class="welcome-label">WELCOME BACK 👋</span>
+
+
+                <span class="welcome-label">
+                    WELCOME BACK 👋
+                </span>
+
 
                 <h2>
-                    Hello, {{ session.get("name", "User") }}!
+                    Hello, {{ user.name }}!
                 </h2>
+
 
                 <p>
                     Manage your health services and appointments
                     from one place.
                 </p>
 
-                <a href="/services" class="primary-btn">
+
+                <a href="/services"
+                   class="primary-btn">
+
                     Explore Services →
+
                 </a>
+
+
             </div>
+
 
             <div class="welcome-heart">
                 ❤
             </div>
 
+
         </section>
+
+
+
+        <!-- =================================================
+             HEALTH OVERVIEW
+        ================================================== -->
 
         <section>
 
+
             <div class="section-title">
+
                 <div>
-                    <h2>Health Overview</h2>
-                    <p>Keep track of your basic health information.</p>
+
+                    <h2>
+                        Health Overview
+                    </h2>
+
+                    <p>
+                        Keep track of your basic health information.
+                    </p>
+
                 </div>
+
             </div>
+
+
 
             <div class="stats-grid">
 
-                <div class="stat-card">
-                    <div class="stat-icon heart">❤</div>
-                    <div>
-                        <p>Heart Rate</p>
-                        <h3>72 <span>BPM</span></h3>
-                    </div>
-                </div>
+
+                <!-- HEART RATE -->
 
                 <div class="stat-card">
-                    <div class="stat-icon weight">⚖</div>
-                    <div>
-                        <p>Weight</p>
-                        <h3>-- <span>kg</span></h3>
+
+                    <div class="stat-icon heart">
+                        ❤
                     </div>
+
+                    <div>
+
+                        <p>
+                            Heart Rate
+                        </p>
+
+                        <h3>
+                            72
+                            <span>
+                                BPM
+                            </span>
+                        </h3>
+
+                    </div>
+
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-icon pressure">♥</div>
-                    <div>
-                        <p>Blood Pressure</p>
-                        <h3>-- <span>mmHg</span></h3>
-                    </div>
-                </div>
+
+
+                <!-- WEIGHT -->
 
                 <div class="stat-card">
-                    <div class="stat-icon sugar">✚</div>
-                    <div>
-                        <p>Blood Sugar</p>
-                        <h3>-- <span>mg/dL</span></h3>
+
+                    <div class="stat-icon weight">
+                        ⚖
                     </div>
+
+                    <div>
+
+                        <p>
+                            Weight
+                        </p>
+
+                        <h3>
+                            --
+                            <span>
+                                kg
+                            </span>
+                        </h3>
+
+                    </div>
+
                 </div>
+
+
+
+                <!-- BLOOD PRESSURE -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon pressure">
+                        ♥
+                    </div>
+
+                    <div>
+
+                        <p>
+                            Blood Pressure
+                        </p>
+
+                        <h3>
+                            --
+                            <span>
+                                mmHg
+                            </span>
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BLOOD SUGAR -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon sugar">
+                        ✚
+                    </div>
+
+                    <div>
+
+                        <p>
+                            Blood Sugar
+                        </p>
+
+                        <h3>
+                            --
+                            <span>
+                                mg/dL
+                            </span>
+                        </h3>
+
+                    </div>
+
+                </div>
+
 
             </div>
 
         </section>
+
+
+
+        <!-- =================================================
+             QUICK ACTIONS
+        ================================================== -->
 
         <section>
 
+
             <div class="section-title">
+
                 <div>
-                    <h2>Quick Actions</h2>
-                    <p>Access your most-used health services.</p>
+
+                    <h2>
+                        Quick Actions
+                    </h2>
+
+                    <p>
+                        Access your most-used health services.
+                    </p>
+
                 </div>
+
             </div>
+
+
 
             <div class="actions-grid">
 
-                <a href="/services" class="action-card">
-                    <div class="action-icon">⚕</div>
 
-                    <div>
-                        <h3>Health Services</h3>
-                        <p>Explore available services</p>
+                <!-- HEALTH SERVICES -->
+
+                <a href="/services"
+                   class="action-card">
+
+                    <div class="action-icon">
+                        ⚕
                     </div>
 
-                    <span class="arrow">→</span>
-                </a>
-
-                <a href="/book" class="action-card">
-                    <div class="action-icon">📅</div>
-
                     <div>
-                        <h3>Book Appointment</h3>
-                        <p>Schedule a health service</p>
+
+                        <h3>
+                            Health Services
+                        </h3>
+
+                        <p>
+                            Explore available services
+                        </p>
+
                     </div>
 
-                    <span class="arrow">→</span>
+                    <span class="arrow">
+                        →
+                    </span>
+
                 </a>
 
-                <a href="/bookings" class="action-card">
-                    <div class="action-icon">📋</div>
 
-                    <div>
-                        <h3>My Bookings</h3>
-                        <p>View your appointments</p>
+
+                <!-- BOOK APPOINTMENT -->
+
+                <a href="/book"
+                   class="action-card">
+
+                    <div class="action-icon">
+                        📅
                     </div>
 
-                    <span class="arrow">→</span>
+                    <div>
+
+                        <h3>
+                            Book Appointment
+                        </h3>
+
+                        <p>
+                            Schedule a health service
+                        </p>
+
+                    </div>
+
+                    <span class="arrow">
+                        →
+                    </span>
+
                 </a>
+
+
+
+                <!-- MY BOOKINGS -->
+
+                <a href="/bookings"
+                   class="action-card">
+
+                    <div class="action-icon">
+                        📋
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            My Bookings
+                        </h3>
+
+                        <p>
+                            View your appointments
+                        </p>
+
+                    </div>
+
+                    <span class="arrow">
+                        →
+                    </span>
+
+                </a>
+
 
             </div>
 
         </section>
 
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
         <footer>
-            <p>© 2026 SmartHealth. Your health, our priority.</p>
+
+            <p>
+                © 2026 SmartHealth.
+                Your health, our priority.
+            </p>
+
         </footer>
 
+
     </main>
+
+
+
+    <!-- =================================================
+         SERVICE WORKER
+    ================================================== -->
+
     <script>
+
         if ("serviceWorker" in navigator) {
-            window.addEventListener("load", function () {
-                navigator.serviceWorker.register("/sw.js")
-                    .then(function (registration) {
-                        console.log("SmartHealth Service Worker Registered");
-                    })
-                    .catch(function (error) {
-                        console.error("Service Worker Error:", error);
-                    });
-            });
+
+            window.addEventListener(
+                "load",
+                function () {
+
+                    navigator.serviceWorker.register("/sw.js")
+
+                        .then(
+                            function (registration) {
+
+                                console.log(
+                                    "SmartHealth Service Worker Registered"
+                                );
+
+                            }
+                        )
+
+                        .catch(
+                            function (error) {
+
+                                console.error(
+                                    "Service Worker Error:",
+                                    error
+                                );
+
+                            }
+                        );
+
+                }
+            );
+
         }
+
     </script>
+
+
 </body>
 
 </html>
