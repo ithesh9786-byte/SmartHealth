@@ -383,10 +383,45 @@ def register():
 
 @app.route("/dashboard")
 def dashboard():
+
     if "email" not in session:
         return redirect(url_for("login"))
 
-    return render_template("dashboard.html")
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    try:
+
+        cursor.execute(
+            """
+            SELECT
+                id,
+                name,
+                email,
+                profile_image
+            FROM users
+            WHERE id = %s
+            """,
+            (session["user_id"],)
+        )
+
+        user = cursor.fetchone()
+
+        if not user:
+            return "User not found.", 404
+
+        initials = get_initials(user["name"])
+
+        return render_template(
+            "dashboard.html",
+            user=user,
+            initials=initials
+        )
+
+    finally:
+
+        cursor.close()
+        db.close()
 
 # =========================================================
 # PROFILE
