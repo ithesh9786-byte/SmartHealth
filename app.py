@@ -4,6 +4,8 @@ from flask import send_from_directory
 
 from workout_data import WORKOUT_DATA
 
+from werkzeug.utils import secure_filename
+
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 from flask import send_from_directory
 
@@ -27,6 +29,25 @@ app.secret_key = os.environ.get(
     "SECRET_KEY",
     "smarthealth-secret-key"
 )
+
+# ==============================
+# PROFILE IMAGE UPLOAD
+# ==============================
+
+UPLOAD_FOLDER = os.path.join("static", "uploads")
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+ALLOWED_EXTENSIONS = {
+    "png",
+    "jpg",
+    "jpeg",
+    "gif",
+    "webp"
+}
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
 # =========================================================
 # ALLOWED GOOGLE TEST USERS
