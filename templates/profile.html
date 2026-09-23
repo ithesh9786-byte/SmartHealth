@@ -1,21 +1,752 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>My Profile</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile - SmartHealth</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at 10% 15%,
+                    rgba(30, 144, 255, 0.18),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 90% 85%,
+                    rgba(0, 200, 255, 0.15),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #eef8ff 0%,
+                    #dcefff 50%,
+                    #f5fbff 100%
+                );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 35px 20px;
+            overflow-x: hidden;
+        }
+
+
+        /* BACKGROUND DECOR */
+
+        body::before {
+            content: "✚    ♡    ⚕    +";
+            position: fixed;
+            top: 35px;
+            right: 40px;
+
+            font-size: 50px;
+            letter-spacing: 20px;
+
+            color: rgba(20, 115, 220, 0.07);
+
+            pointer-events: none;
+        }
+
+
+        /* MAIN CARD */
+
+        .profile-card {
+            position: relative;
+            z-index: 2;
+
+            width: 100%;
+            max-width: 900px;
+
+            padding: 42px;
+
+            background: rgba(255, 255, 255, 0.88);
+
+            border: 1px solid rgba(255,255,255,0.95);
+
+            border-radius: 30px;
+
+            box-shadow:
+                0 28px 65px rgba(35, 90, 140, 0.15),
+                inset 0 1px 0 rgba(255,255,255,0.95);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+
+        /* HEADER */
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .logo {
+            width: 58px;
+            height: 58px;
+
+            border-radius: 18px;
+
+            display: grid;
+            place-items: center;
+
+            color: white;
+
+            font-size: 27px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #1269ef,
+                    #20c7f4
+                );
+
+            box-shadow:
+                0 12px 25px rgba(20,120,255,.20);
+        }
+
+
+        .header h1 {
+            margin: 0;
+
+            color: #112f56;
+
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+
+        .header p {
+            margin: 5px 0 0;
+
+            color: #7b8fa8;
+
+            font-size: 13px;
+        }
+
+
+        /* MESSAGE */
+
+        .message {
+            margin-bottom: 20px;
+
+            padding: 13px 15px;
+
+            border-radius: 12px;
+
+            background: #eaf8f0;
+
+            border: 1px solid #ccebd8;
+
+            color: #26794b;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* AVATAR */
+
+        .avatar-section {
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .avatar {
+            width: 125px;
+            height: 125px;
+
+            margin: auto;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+
+            border: 5px solid white;
+
+            color: white;
+
+            font-size: 38px;
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #1268ef,
+                    #20c5f4
+                );
+
+            box-shadow:
+                0 15px 35px rgba(20,120,255,.22);
+        }
+
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+
+        .photo-label {
+            display: inline-block;
+
+            margin-top: 12px;
+
+            color: #1678e7;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        .photo-label:hover {
+            text-decoration: underline;
+        }
+
+
+        .photo-input {
+            display: none;
+        }
+
+
+        /* FORM */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .field label {
+            margin-bottom: 8px;
+
+            color: #2c4766;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        .field input,
+        .field select {
+
+            width: 100%;
+            height: 52px;
+
+            padding: 0 15px;
+
+            border-radius: 14px;
+
+            border: 1px solid #d7e5f1;
+
+            outline: none;
+
+            background: rgba(248,252,255,0.95);
+
+            color: #29445f;
+
+            font-size: 14px;
+
+            transition: 0.2s ease;
+        }
+
+
+        .field input::placeholder {
+            color: #9aabba;
+        }
+
+
+        .field input:focus,
+        .field select:focus {
+
+            border-color: #3795f5;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(55,149,245,0.10);
+        }
+
+
+        /* BOTTOM */
+
+        .actions {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-top: 30px;
+
+            padding-top: 22px;
+
+            border-top:
+                1px solid #e9f0f6;
+        }
+
+
+        .back-link {
+
+            color: #1576e5;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+
+        .save-button {
+
+            min-width: 190px;
+
+            height: 52px;
+
+            border: none;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    100deg,
+                    #1268ef,
+                    #18baf3
+                );
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 12px 27px
+                rgba(20,117,240,.22);
+
+            transition: 0.25s ease;
+        }
+
+
+        .save-button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 17px 33px
+                rgba(20,117,240,.28);
+        }
+
+
+        .save-button:active {
+            transform: translateY(0);
+        }
+
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            .profile-card {
+                padding: 28px 20px;
+                border-radius: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .actions {
+                flex-direction: column-reverse;
+                gap: 18px;
+
+                align-items: stretch;
+            }
+
+            .save-button {
+                width: 100%;
+            }
+
+            .back-link {
+                text-align: center;
+            }
+        }
+
+
+        @media (max-width: 480px) {
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+
+            .avatar {
+                width: 110px;
+                height: 110px;
+
+                font-size: 32px;
+            }
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <h1>My Profile</h1>
 
-    <p><strong>Name:</strong> {{ user.name }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
+<div class="profile-card">
 
-    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
+            ♥
+        </div>
+
+        <div>
+
+            <h1>
+                My Profile
+            </h1>
+
+            <p>
+                Manage your SmartHealth account
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUCCESS / ERROR MESSAGE -->
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+
+    <!-- PROFILE PHOTO -->
+
+    <div class="avatar-section">
+
+        <div class="avatar" id="avatar">
+
+            {% if user.profile_image %}
+
+                <img
+                    src="{{ url_for('static', filename=user.profile_image) }}"
+                    alt="Profile Photo"
+                >
+
+            {% else %}
+
+                {{ initials }}
+
+            {% endif %}
+
+        </div>
+
+
+        <label
+            for="profileImage"
+            class="photo-label"
+        >
+            Change Profile Photo
+        </label>
+
+
+        <input
+            type="file"
+            id="profileImage"
+            name="profile_image"
+            accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+            form="profileForm"
+            class="photo-input"
+            onchange="previewImage(event)"
+        >
+
+    </div>
+
+
+
+    <!-- FORM -->
+
+    <form
+        id="profileForm"
+        method="POST"
+        action="{{ url_for('profile') }}"
+        enctype="multipart/form-data"
+    >
+
+        <div class="form-grid">
+
+
+            <!-- FULL NAME -->
+
+            <div class="field">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ user.name }}"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="field">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ user.email }}"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="field">
+
+                <label>
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    name="phone"
+                    value="{{ user.phone or '' }}"
+                    placeholder="Enter phone number"
+                >
+
+            </div>
+
+
+            <!-- DOB -->
+
+            <div class="field">
+
+                <label>
+                    Date of Birth
+                </label>
+
+                <input
+                    type="date"
+                    name="date_of_birth"
+                    value="{% if user.date_of_birth %}{{ user.date_of_birth.strftime('%Y-%m-%d') }}{% endif %}"
+                >
+
+            </div>
+
+
+            <!-- GENDER -->
+
+            <div class="field">
+
+                <label>
+                    Gender
+                </label>
+
+                <select name="gender">
+
+                    <option value="">
+                        Select Gender
+                    </option>
+
+                    <option
+                        value="Male"
+                        {% if user.gender == "Male" %}selected{% endif %}
+                    >
+                        Male
+                    </option>
+
+                    <option
+                        value="Female"
+                        {% if user.gender == "Female" %}selected{% endif %}
+                    >
+                        Female
+                    </option>
+
+                    <option
+                        value="Other"
+                        {% if user.gender == "Other" %}selected{% endif %}
+                    >
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- LOCATION -->
+
+            <div class="field">
+
+                <label>
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    name="location"
+                    value="{{ user.location or '' }}"
+                    placeholder="Enter your location"
+                >
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="back-link"
+            >
+                ← Back to Dashboard
+            </a>
+
+
+            <button
+                type="submit"
+                class="save-button"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+
+<script>
+
+function previewImage(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    const avatar = document.getElementById("avatar");
+
+    const image = document.createElement("img");
+
+    image.src = URL.createObjectURL(file);
+
+    image.alt = "Profile Preview";
+
+    avatar.innerHTML = "";
+
+    avatar.appendChild(image);
+}
+
+</script>
+
 
 </body>
 
-</html>
 </html>
