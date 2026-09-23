@@ -388,6 +388,10 @@ def dashboard():
 
     return render_template("dashboard.html")
 
+# =========================================================
+# PROFILE
+# =========================================================
+
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
 
@@ -399,9 +403,9 @@ def profile():
 
     try:
 
-        # ==================================
+        # =================================================
         # UPDATE PROFILE
-        # ==================================
+        # =================================================
 
         if request.method == "POST":
 
@@ -409,38 +413,24 @@ def profile():
             email = request.form.get("email", "").strip().lower()
             phone = request.form.get("phone", "").strip()
 
-            date_of_birth = (
-                request.form.get("date_of_birth")
-                or None
-            )
+            date_of_birth = request.form.get("date_of_birth") or None
+            gender = request.form.get("gender") or None
+            location = request.form.get("location", "").strip()
 
-            gender = (
-                request.form.get("gender")
-                or None
-            )
-
-            location = request.form.get(
-                "location",
-                ""
-            ).strip()
-
-
-            # Required fields
+            # ---------------------------------------------
+            # Validate required fields
+            # ---------------------------------------------
 
             if not name or not email:
 
-                flash(
-                    "Name and email are required."
-                )
+                flash("Name and email are required.")
 
-                return redirect(
-                    url_for("profile")
-                )
+                return redirect(url_for("profile"))
 
 
-            # ==================================
-            # GET OLD PROFILE IMAGE
-            # ==================================
+            # ---------------------------------------------
+            # Get existing profile image
+            # ---------------------------------------------
 
             cursor.execute(
                 """
@@ -453,36 +443,27 @@ def profile():
 
             old_user = cursor.fetchone()
 
-            profile_image = (
-                old_user["profile_image"]
-                if old_user
-                else None
-            )
+            profile_image = None
+
+            if old_user:
+                profile_image = old_user.get("profile_image")
 
 
-            # ==================================
-            # PROFILE PHOTO
-            # ==================================
+            # ---------------------------------------------
+            # Profile image upload
+            # ---------------------------------------------
 
-            photo = request.files.get(
-                "profile_image"
-            )
+            photo = request.files.get("profile_image")
 
             if photo and photo.filename:
 
-                filename = secure_filename(
-                    photo.filename
-                )
+                filename = secure_filename(photo.filename)
 
                 if "." not in filename:
 
-                    flash(
-                        "Invalid image file."
-                    )
+                    flash("Invalid image file.")
 
-                    return redirect(
-                        url_for("profile")
-                    )
+                    return redirect(url_for("profile"))
 
 
                 extension = (
@@ -495,17 +476,14 @@ def profile():
                 if extension not in ALLOWED_EXTENSIONS:
 
                     flash(
-                        "Only image files are allowed."
+                        "Only PNG, JPG, JPEG, GIF and WEBP images are allowed."
                     )
 
-                    return redirect(
-                        url_for("profile")
-                    )
+                    return redirect(url_for("profile"))
 
 
                 new_filename = (
-                    f"user_{session['user_id']}."
-                    f"{extension}"
+                    f"user_{session['user_id']}.{extension}"
                 )
 
 
@@ -522,9 +500,9 @@ def profile():
                 )
 
 
-            # ==================================
-            # UPDATE MYSQL
-            # ==================================
+            # ---------------------------------------------
+            # Update MySQL
+            # ---------------------------------------------
 
             cursor.execute(
                 """
@@ -554,26 +532,22 @@ def profile():
             db.commit()
 
 
-            # ==================================
-            # UPDATE SESSION
-            # ==================================
+            # ---------------------------------------------
+            # Update session
+            # ---------------------------------------------
 
             session["name"] = name
             session["email"] = email
 
 
-            flash(
-                "Profile updated successfully!"
-            )
+            flash("Profile updated successfully!")
 
-            return redirect(
-                url_for("profile")
-            )
+            return redirect(url_for("profile"))
 
 
-        # ==================================
+        # =================================================
         # LOAD PROFILE
-        # ==================================
+        # =================================================
 
         cursor.execute(
             """
@@ -600,9 +574,11 @@ def profile():
             return "User not found.", 404
 
 
-        initials = get_initials(
-            user["name"]
-        )
+        # ---------------------------------------------
+        # Generate initials
+        # ---------------------------------------------
+
+        initials = get_initials(user["name"])
 
 
         return render_template(
@@ -616,13 +592,9 @@ def profile():
 
         db.rollback()
 
-        flash(
-            "This email is already used."
-        )
+        flash("This email is already used.")
 
-        return redirect(
-            url_for("profile")
-        )
+        return redirect(url_for("profile"))
 
 
     except Exception as e:
