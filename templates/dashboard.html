@@ -466,142 +466,129 @@
              HEALTH OVERVIEW
         ================================================== -->
 
-        <section>
+       <section>
+
+    <div class="section-title">
+        <div>
+            <h2>Health Overview</h2>
+            <p>Keep track of your latest health information.</p>
+        </div>
+    </div>
 
 
-            <div class="section-title">
+    <div class="stats-grid">
 
-                <div>
 
-                    <h2>
-                        Health Overview
-                    </h2>
+        <!-- HEART RATE -->
 
-                    <p>
-                        Keep track of your basic health information.
-                    </p>
+        <div class="stat-card">
 
-                </div>
+            <div class="stat-icon heart">
+                ❤
+            </div>
+
+            <div>
+
+                <p>Heart Rate</p>
+
+                <h3>
+                    {% if health_data and health_data.heart_rate %}
+                        {{ health_data.heart_rate }}
+                        <span>BPM</span>
+                    {% else %}
+                        -- <span>BPM</span>
+                    {% endif %}
+                </h3>
 
             </div>
 
-
-
-            <div class="stats-grid">
-
-
-                <!-- HEART RATE -->
-
-                <div class="stat-card">
-
-                    <div class="stat-icon heart">
-                        ❤
-                    </div>
-
-                    <div>
-
-                        <p>
-                            Heart Rate
-                        </p>
-
-                        <h3>
-                            72
-                            <span>
-                                BPM
-                            </span>
-                        </h3>
-
-                    </div>
-
-                </div>
+        </div>
 
 
 
-                <!-- WEIGHT -->
+        <!-- WEIGHT -->
 
-                <div class="stat-card">
+        <div class="stat-card">
 
-                    <div class="stat-icon weight">
-                        ⚖
-                    </div>
+            <div class="stat-icon weight">
+                ⚖
+            </div>
 
-                    <div>
+            <div>
 
-                        <p>
-                            Weight
-                        </p>
+                <p>Weight</p>
 
-                        <h3>
-                            --
-                            <span>
-                                kg
-                            </span>
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- BLOOD PRESSURE -->
-
-                <div class="stat-card">
-
-                    <div class="stat-icon pressure">
-                        ♥
-                    </div>
-
-                    <div>
-
-                        <p>
-                            Blood Pressure
-                        </p>
-
-                        <h3>
-                            --
-                            <span>
-                                mmHg
-                            </span>
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- BLOOD SUGAR -->
-
-                <div class="stat-card">
-
-                    <div class="stat-icon sugar">
-                        ✚
-                    </div>
-
-                    <div>
-
-                        <p>
-                            Blood Sugar
-                        </p>
-
-                        <h3>
-                            --
-                            <span>
-                                mg/dL
-                            </span>
-                        </h3>
-
-                    </div>
-
-                </div>
-
+                <h3>
+                    {% if health_data and health_data.weight %}
+                        {{ health_data.weight }}
+                        <span>kg</span>
+                    {% else %}
+                        -- <span>kg</span>
+                    {% endif %}
+                </h3>
 
             </div>
 
-        </section>
+        </div>
 
 
+
+        <!-- BLOOD PRESSURE -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon pressure">
+                ♥
+            </div>
+
+            <div>
+
+                <p>Blood Pressure</p>
+
+                <h3>
+                    {% if health_data and health_data.blood_pressure %}
+                        {{ health_data.blood_pressure }}
+                        <span>mmHg</span>
+                    {% else %}
+                        -- <span>mmHg</span>
+                    {% endif %}
+                </h3>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BLOOD SUGAR -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon sugar">
+                ✚
+            </div>
+
+            <div>
+
+                <p>Blood Sugar</p>
+
+                <h3>
+                    {% if health_data and health_data.blood_sugar %}
+                        {{ health_data.blood_sugar }}
+                        <span>mg/dL</span>
+                    {% else %}
+                        -- <span>mg/dL</span>
+                    {% endif %}
+                </h3>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
 
         <!-- =================================================
              QUICK ACTIONS
